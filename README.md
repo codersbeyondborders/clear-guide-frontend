@@ -1,161 +1,133 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# ClearGuide — Frontend
 
-# Clear Guide
+> **AI-native product intelligence platform** that transforms static equipment manuals into multi-modal, accessible, interactive experiences. Built for the XPRIZE Hackathon.
 
-**Clear Guide** is an AI-powered, cloud-based SaaS platform that transforms static, paper-based product manuals into dynamic, multi-format, and fully accessible digital guides. Built as a social enterprise, it targets the £274 billion "Purple Pound" market while helping manufacturers meet rising ESG and accessibility regulations.
-
-> Developed as part of the MSc Disability, Design & Innovation (2025–26) programme at UAL, using the Sustainable Design Thinking Model and a "Design From the Margins" approach.
-
----
-
-## The Problem
-
-Traditional paper manuals rely on tiny font sizes and low-contrast layouts that are entirely inaccessible to users with visual or cognitive impairments. Research found that:
-
-- Over **1.3 billion people** globally live with a disability, many of whom are excluded by paper-based documentation
-- **60% of users** have abandoned a task or device due to an inaccessible manual
-- Paper is overwhelmingly kept for warranty purposes only — not used for instruction
-- Users trust YouTube and peer-to-peer advice over official guides
+[![Next.js](https://img.shields.io/badge/Next.js-15-black?logo=nextdotjs)](https://nextjs.org)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?logo=typescript)](https://www.typescriptlang.org)
+[![Firebase](https://img.shields.io/badge/Firebase-Auth%20%2B%20Firestore-orange?logo=firebase)](https://firebase.google.com)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind-CSS-38bdf8?logo=tailwindcss)](https://tailwindcss.com)
+[![WCAG](https://img.shields.io/badge/WCAG-2.2%20AAA-green)](https://www.w3.org/WAI/standards-guidelines/wcag/)
 
 ---
 
-## The Solution
+## What is ClearGuide?
 
-Clear Guide replaces paper manuals with an accessible, AI-driven digital alternative. Manufacturers upload their documentation once; the platform automatically converts it into:
+ClearGuide bridges the gap between complex technical documentation and real-world users who need to understand it — regardless of literacy level, language, or ability.
 
-- 📖 **Screen-reader-optimised text** with scalable font sizes and high-contrast mode
-- 🎙️ **Voice-guided instructions** with full audio descriptions for every section
-- 🎬 **Audio-described video walkthroughs** per manual section
-- 🤖 **Interactive AI chat** — ask questions in plain language, get instant answers
-- 🌍 **16-language support** via automatic translation
-- 📱 **QR code integration** — scan from product packaging to open the manual instantly
-
----
-
-## Key Features
-
-| Feature | Description |
-|---|---|
-| Manufacturer Dashboard | Upload, edit, and publish manuals with real-time analytics |
-| Accessible Manual Viewer | High-contrast mode, adjustable font sizes, TTS, and keyboard navigation |
-| AI Chat Support | Voice and text input with transparent AI disclosure |
-| Multi-format Delivery | Text, infographic, video, and chat views in a single interface |
-| QR Code Generation | Auto-generated QR codes linking product to its digital manual |
-| Analytics | Track views, active users, average time spent, and top AI queries |
-
----
-
-## The Curb-Cut Effect
-
-Features engineered for accessibility deliver mainstream benefits too:
-
-| "Extreme" Feature | Designed For | Mainstream Benefit |
-|---|---|---|
-| Audio descriptions | Blind / low-vision users | Hands-free instructions while working |
-| Video walkthroughs | Cognitive disabilities | Quick reference for busy professionals |
-| High-contrast / scalable UI | Low visual acuity | Better readability outdoors or in low light |
-| Interactive AI chat | Complex navigation difficulties | Instant search — skip irrelevant content |
-
----
-
-## Business Model
-
-Clear Guide operates as a **social enterprise** on a tiered B2B subscription model:
-
-| Tier | Price | Includes |
-|---|---|---|
-| Free | £0/month | Up to 3 manuals, basic accessibility features, QR code generation |
-| Pro | £29/month | Unlimited manuals, full accessibility suite, AI chat support, analytics |
-| Enterprise | £89/month | Custom branding, SSO, API access, dedicated account manager |
-
-A portion of corporate profits subsidises digitisation for small assistive technology providers and non-profits.
-
----
-
-## Social & Environmental Impact
-
-- Eliminates thousands of tons of paper waste annually
-- Aligns with **SDG 10** (Reduced Inequalities) and **SDG 12** (Responsible Consumption and Production)
-- Supports compliance with the **European Accessibility Act**, **UK Equality Act**, and **Digital Product Passport (DPP)** regulations (mandatory from 2027)
-- Enables circular economy by keeping repair and recycling guides accessible throughout a product's lifecycle
+**Key capabilities:**
+- 📷 **Camera Visual Search** — point your camera at a machine or broken part to instantly retrieve relevant manual sections and troubleshooting steps
+- 🔍 **QR & Specs Search** — scan a QR code or search by model number to pull up interactive equipment specs and exploded diagrams
+- 🎬 **Dynamic Video Generator** — auto-synthesizes step-by-step video walkthroughs for repair procedures
+- 💬 **Community Repair Hub** — product-specific forums powered by an autonomous AI moderator (`GuideBot`)
+- ♿ **Accessibility First** — WCAG 2.2 AAA compliant with high-contrast modes, ARIA live regions, voice input, and simplified language summaries
 
 ---
 
 ## Tech Stack
 
-- **Frontend:** React 19, TypeScript, Tailwind CSS v4
-- **Backend:** Next.js App Router with Route Handlers (API)
-- **AI:** Google Gemini API (`@google/genai`)
-- **Charts:** Recharts
-- **Icons:** Lucide React
-- **Styling utilities:** clsx, tailwind-merge
-
----
-
-## Run Locally
-
-**Prerequisites:** Node.js 18+
-
-1. Install dependencies:
-   ```bash
-   npm install
-   ```
-
-2. Copy the environment file and add your Gemini API key:
-   ```bash
-   cp .env.example .env.local
-   ```
-   Then set `GEMINI_API_KEY` in `.env.local`.
-
-3. Start the development server:
-   ```bash
-   npm run dev
-   ```
-
-4. Open [http://localhost:3000](http://localhost:3000) in your browser.
-
-### Demo Credentials (Manufacturer Portal)
-
-| Field | Value |
+| Layer | Technology |
 |---|---|
-| Email | `demo@brewtech.com` |
-| Password | `password123` |
+| Framework | Next.js 15 (App Router) |
+| Language | TypeScript |
+| Styling | Tailwind CSS |
+| Auth | Firebase Authentication |
+| Database | Firebase Firestore |
+| Storage | Firebase Storage |
+| AI / Backend | REST API → `clear-guide-backend` |
 
 ---
 
 ## Project Structure
 
 ```
-├── app/
-│   ├── api/                  # Next.js Route Handlers (manuals, chat, analytics)
-│   ├── manufacturer/         # Dashboard, login, editor, analytics pages
-│   ├── manual/[id]/          # End-user manual viewer
-│   ├── user/                 # End-user portal (QR scan / product search)
-│   └── page.tsx              # Landing page
+clear-guide-frontend/
+├── app/                        # Next.js App Router pages
+│   ├── manufacturer/           # Manufacturer dashboard, auth, manual creation
+│   ├── manual/[id]/            # Manual viewer (text, video, chat, forum, infographic)
+│   ├── find/                   # QR + camera + spec search
+│   ├── community/              # Community hub & forums
+│   └── u/[username]/           # User profiles
 ├── components/
-│   ├── pages/                # Shared page-level components (ManualEditor)
-│   ├── ui/                   # Primitive UI components (Button, Input)
-│   └── viewer/               # AccessibleManualViewer, AIChatSupport
-├── lib/
-│   └── utils.ts              # cn() utility (clsx + tailwind-merge)
-└── public/                   # Static assets (images, videos, QR codes)
+│   ├── ui/                     # Base UI primitives (Button, Card, Modal, etc.)
+│   ├── dashboard/              # Manufacturer dashboard components
+│   ├── find/                   # Search components (QR, photo, spec)
+│   ├── hub/                    # Community hub components
+│   ├── community/              # Forum & review components
+│   └── viewer/                 # Manual viewer components
+├── context/                    # React context providers (Auth, Theme, Accessibility)
+├── hooks/                      # Custom hooks (useAuth, useManuals, useTTS, etc.)
+├── lib/                        # Utilities, Firebase config, API client, types
+└── public/                     # Static assets
 ```
 
 ---
 
-## References
+## Getting Started
 
-- Blackwell, A. (2017) *The Curb-Cut Effect*, Stanford Social Innovation Review
-- Chen, N. (2019) *A Model of Universal Manual Design for Technical Products*, KTH Royal Institute of Technology
-- Rigot, A. (2022) *Design From the Margins*, Harvard Kennedy School Belfer Center
-- Scope (2026) *Attracting more disabled customers and the Purple Pound*
-- WHO (2022) *Disability*, World Health Organization
-- European Parliament (2024) *Digital Product Passport for the Textile Sector*
+### Prerequisites
+
+- Node.js 18+
+- A Firebase project with Auth, Firestore, and Storage enabled
+- The `clear-guide-backend` running locally or deployed
+
+### 1. Clone & Install
+
+```bash
+git clone git@github.com:codersbeyondborders/clear-guide-frontend.git
+cd clear-guide-frontend
+npm install
+```
+
+### 2. Set Up Environment Variables
+
+```bash
+cp .env.example .env.local
+```
+
+Fill in your Firebase config and backend URL in `.env.local`:
+
+```env
+NEXT_PUBLIC_FIREBASE_API_KEY=
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=
+NEXT_PUBLIC_FIREBASE_APP_ID=
+NEXT_PUBLIC_API_URL=http://localhost:3001
+```
+
+### 3. Run Locally
+
+```bash
+npm run dev
+```
+
+Open [http://localhost:3000](http://localhost:3000).
 
 ---
 
-<div align="center">
-  <sub>Built with accessibility at the core — not as an afterthought.</sub>
-</div>
+## User Roles
+
+| Role | Access |
+|---|---|
+| **End User** | Browse manuals, visual search, community hub, profile |
+| **Manufacturer** | Create/manage manuals, analytics dashboard, team invites |
+| **Admin** | Full platform access |
+
+---
+
+## Related Repos
+
+| Repo | Description |
+|---|---|
+| [`clear-guide-backend`](https://github.com/codersbeyondborders/clear-guide-backend) | API Gateway (Fastify) + AI Agent Mesh (Python/FastAPI) |
+
+---
+
+## Contributing
+
+This project is part of the **XPRIZE Hackathon**. Contributions from the team are welcome — please branch off `main` and open a PR.
+
+---
+
+*Built with ❤️ by Coders Beyond Borders*
