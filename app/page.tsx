@@ -4,7 +4,7 @@ import {
   BookOpen, Check, X, Star,
   Shield, MessageSquare, Globe, Volume2,
   LayoutDashboard, QrCode, ChevronDown, Zap,
-  ArrowRight, Sparkles,
+  ArrowRight, Sparkles, UserRound, Building2,
   Twitter, Linkedin, Github,
   AlignLeft, Play, Image as ImageIcon, Brain, Download,
   MousePointerClick, Factory,
@@ -56,8 +56,8 @@ function Hero() {
                 Get started free
                 <ArrowRight className="w-4 h-4" aria-hidden="true" />
               </Link>
-              <a href="#features" className="btn-outline">
-                See how it works
+              <a href="#get-started" className="btn-outline">
+                Get started
               </a>
             </div>
 
@@ -89,54 +89,155 @@ function Hero() {
   )
 }
 
-/* ─── See How It Works ──────────────────────────────────────────────────── */
-function SeeHowItWorks() {
+/* ─── Get Started Section ───────────────────────────────────────────────── */
+const USER_BENEFITS = [
+  'Find accessible manuals for any product',
+  'AI chat support for troubleshooting',
+  'High-contrast & large-text modes',
+  'Personalised accessibility preferences',
+  'Free — no subscription needed',
+]
+
+const MFG_BENEFITS = [
+  'Publish AI-powered product manuals',
+  'Multi-language support out of the box',
+  'Analytics & engagement insights',
+  'QR code & AR viewer integrations',
+  'Team collaboration with role-based access',
+]
+
+function GetStartedSection() {
   return (
     <section
-      id="how-it-works"
+      id="get-started"
       className="py-20 md:py-28 bg-slate-50 border-y border-slate-100"
-      aria-labelledby="how-it-works-heading"
+      aria-labelledby="get-started-heading"
     >
       <div className="container">
-        <div className="max-w-2xl mx-auto text-center">
+        <div className="max-w-3xl mx-auto text-center mb-12">
           <SectionLabel>Get Started</SectionLabel>
           <h2
-            id="how-it-works-heading"
+            id="get-started-heading"
             className="text-3xl md:text-4xl lg:text-5xl font-bold text-slate-900 tracking-tight mb-5 text-balance"
           >
-            See how ClearGuide works
+            How will you use ClearGuide?
           </h2>
-          <p className="text-base text-slate-500 leading-relaxed mb-12 max-w-lg mx-auto">
-            Whether you&apos;re finding a guide for a product you own or publishing
-            manuals for your customers — ClearGuide makes it effortless.
+          <p className="text-base text-slate-500 leading-relaxed max-w-lg mx-auto">
+            Choose your account type to get started. You can always switch later.
           </p>
+        </div>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            {/* For Users — emerald outline → filled on hover */}
-            <a
-              href="#find-guide"
-              className="group inline-flex items-center gap-3 rounded-2xl border-2 border-emerald-500 text-emerald-600 bg-transparent hover:bg-emerald-500 hover:text-white px-8 py-5 font-semibold text-sm transition-all duration-200 w-full sm:w-auto justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
-            >
-              <MousePointerClick className="w-5 h-5 shrink-0" aria-hidden="true" />
-              <span>
-                <span className="block text-base font-bold tracking-tight">For Users</span>
-                <span className="block text-xs opacity-70 font-normal mt-0.5">Find your product guide</span>
-              </span>
-              <ArrowRight className="w-4 h-4 shrink-0 ml-auto transition-transform group-hover:translate-x-1" aria-hidden="true" />
-            </a>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+          {/* User card */}
+          <div className="rounded-2xl border border-slate-200 bg-white p-8 flex flex-col gap-6 shadow-sm hover:shadow-md transition-shadow">
+            <div className="flex items-center gap-3">
+              <div
+                className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0"
+                style={{ backgroundColor: 'var(--color-primary-subtle)' }}
+                aria-hidden="true"
+              >
+                <UserRound className="w-6 h-6" style={{ color: 'var(--color-primary)' }} />
+              </div>
+              <div>
+                <h3 className="font-bold text-xl text-slate-900 leading-snug">
+                  I&apos;m a User
+                </h3>
+                <p className="text-xs text-slate-500">
+                  Consumer / end user
+                </p>
+              </div>
+            </div>
 
-            {/* For Manufacturers — slate outline → filled on hover */}
-            <a
-              href="#manufacturers"
-              className="group inline-flex items-center gap-3 rounded-2xl border-2 border-slate-900 text-slate-900 bg-transparent hover:bg-slate-900 hover:text-white px-8 py-5 font-semibold text-sm transition-all duration-200 w-full sm:w-auto justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-700"
+            <ul className="flex flex-col gap-2.5" aria-label="User account benefits">
+              {USER_BENEFITS.map((b) => (
+                <li key={b} className="flex items-start gap-2.5 text-sm text-slate-700">
+                  <Check
+                    className="w-4 h-4 mt-0.5 shrink-0"
+                    style={{ color: 'var(--color-primary)' }}
+                    aria-hidden="true"
+                  />
+                  {b}
+                </li>
+              ))}
+            </ul>
+
+            <div className="flex flex-col gap-2.5 mt-auto pt-4 border-t border-slate-100">
+              <Link
+                href="/user/sign-up"
+                className="btn-primary text-sm text-center flex items-center justify-center gap-2"
+              >
+                Create free account
+                <ArrowRight className="w-4 h-4" aria-hidden="true" />
+              </Link>
+              <a
+                href="#find-your-product"
+                className="btn-outline text-sm text-center flex items-center justify-center gap-2 border-slate-200 text-slate-700 hover:border-slate-400 hover:bg-slate-50"
+              >
+                Continue as guest
+              </a>
+              <Link
+                href="/user/sign-in"
+                className="btn-ghost text-sm text-center text-slate-500 hover:text-slate-900"
+              >
+                Already have an account? Sign in
+              </Link>
+            </div>
+          </div>
+
+          {/* Manufacturer card */}
+          <div className="rounded-2xl border border-slate-200 bg-white p-8 flex flex-col gap-6 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden">
+            <div
+              className="absolute top-4 right-4 text-xs font-semibold px-2.5 py-1 rounded-full border border-emerald-200 bg-emerald-50 text-emerald-700"
             >
-              <Factory className="w-5 h-5 shrink-0" aria-hidden="true" />
-              <span>
-                <span className="block text-base font-bold tracking-tight">For Manufacturers</span>
-                <span className="block text-xs opacity-70 font-normal mt-0.5">Publish accessible manuals</span>
-              </span>
-              <ArrowRight className="w-4 h-4 shrink-0 ml-auto transition-transform group-hover:translate-x-1" aria-hidden="true" />
-            </a>
+              For businesses
+            </div>
+
+            <div className="flex items-center gap-3">
+              <div
+                className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0"
+                style={{ backgroundColor: 'var(--color-primary-subtle)' }}
+                aria-hidden="true"
+              >
+                <Building2 className="w-6 h-6" style={{ color: 'var(--color-primary)' }} />
+              </div>
+              <div>
+                <h3 className="font-bold text-xl text-slate-900 leading-snug">
+                  I&apos;m a Manufacturer
+                </h3>
+                <p className="text-xs text-slate-500">
+                  Brand / product company
+                </p>
+              </div>
+            </div>
+
+            <ul className="flex flex-col gap-2.5" aria-label="Manufacturer account benefits">
+              {MFG_BENEFITS.map((b) => (
+                <li key={b} className="flex items-start gap-2.5 text-sm text-slate-700">
+                  <Check
+                    className="w-4 h-4 mt-0.5 shrink-0"
+                    style={{ color: 'var(--color-primary)' }}
+                    aria-hidden="true"
+                  />
+                  {b}
+                </li>
+              ))}
+            </ul>
+
+            <div className="flex flex-col gap-2.5 mt-auto pt-4 border-t border-slate-100">
+              <Link
+                href="/manufacturer/sign-up"
+                className="btn-primary text-sm text-center flex items-center justify-center gap-2"
+              >
+                Start publishing free
+                <ArrowRight className="w-4 h-4" aria-hidden="true" />
+              </Link>
+              <Link
+                href="/manufacturer/sign-in"
+                className="btn-ghost text-sm text-center text-slate-500 hover:text-slate-900"
+              >
+                Already have a company account? Sign in
+              </Link>
+            </div>
           </div>
         </div>
       </div>
@@ -174,7 +275,7 @@ const whyFeatures = [
 
 function WhyClearGuide() {
   return (
-    <section className="py-20 md:py-28 bg-white" aria-labelledby="why-heading">
+    <section id="about" className="py-20 md:py-28 bg-white" aria-labelledby="why-heading">
       <div className="container">
         <div className="grid md:grid-cols-2 gap-16 items-start">
 
@@ -962,7 +1063,7 @@ function FAQ() {
 /* ─── Final CTA ─────────────────────────────────────────────────────────── */
 function FinalCTA() {
   return (
-    <section className="py-20 md:py-28 bg-slate-900" aria-labelledby="final-cta-heading">
+    <section id="contact" className="py-20 md:py-28 bg-slate-900" aria-labelledby="final-cta-heading">
       <div className="container">
         <div className="max-w-2xl mx-auto text-center">
           <div
@@ -1125,7 +1226,7 @@ export default function LandingPage() {
       <NavBar />
       <main id="main-content">
         <Hero />
-        <SeeHowItWorks />
+        <GetStartedSection />
         <WhyClearGuide />
         <BeforeAfter />
         <PlatformFeatures />

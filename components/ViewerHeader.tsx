@@ -8,6 +8,8 @@ import {
 import { useState, useEffect, useRef } from 'react'
 import { useAccessibility } from '@/context/AccessibilityContext'
 import { ThemeToggle } from '@/components/ThemeToggle'
+import { OfflineDownloadButton } from '@/components/OfflineDownloadButton'
+
 
 // ---------------------------------------------------------------------------
 // Types
@@ -371,6 +373,10 @@ export function ViewerHeader({
 
             {/* Theme toggle */}
             <ThemeToggle />
+
+            {/* Offline PWA Save */}
+            <OfflineDownloadButton manualId={manualId} title={manualInfo.productName} />
+
 
             {/* Info */}
             <ToolBtn

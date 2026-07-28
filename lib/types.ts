@@ -455,6 +455,7 @@ export interface HubPost {
   author: { id: string; name: string; username: string | null; avatarUrl: string | null }
   productName?: string | null
   productBrand?: string | null
+  tags?: string[]
   // viewer state
   isLiked?: boolean
   isBookmarked?: boolean

@@ -18,8 +18,8 @@ export function FindYourGuideSection() {
 
   return (
     <section
-      id="find-guide"
-      aria-labelledby="find-guide-heading"
+      id="find-your-product"
+      aria-labelledby="find-your-product-heading"
       className="py-16 md:py-24"
       style={{ backgroundColor: '#0f172a', borderTop: '1px solid rgba(255,255,255,0.06)', borderBottom: '1px solid rgba(255,255,255,0.06)' }}
     >
@@ -35,11 +35,11 @@ export function FindYourGuideSection() {
             For End Users
           </div>
           <h2
-            id="find-guide-heading"
+            id="find-your-product-heading"
             className="text-3xl md:text-4xl font-bold leading-tight text-balance mb-3"
             style={{ color: '#f1f5f9' }}
           >
-            Find Your Product Guide
+            Find Your Product
           </h2>
           <p className="text-sm leading-relaxed" style={{ color: 'rgba(241,245,249,0.55)' }}>
             Scan the QR code on your product or enter its details manually — your accessible guide
@@ -167,7 +167,7 @@ export function FindYourGuideSection() {
               <p className="text-xs font-semibold uppercase tracking-wider mb-5" style={{ color: 'rgba(241,245,249,0.35)' }}>
                 Search by product details
               </p>
-              <div className="find-guide-form-surface">
+              <div className="find-your-product-form-surface">
                 <ManualSearchForm />
               </div>
             </div>

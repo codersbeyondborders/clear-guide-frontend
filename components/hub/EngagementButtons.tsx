@@ -150,12 +150,12 @@ export function ShareButton({ url }: { url: string }) {
 interface FollowButtonProps {
   userId: string
   initialFollowing: boolean
-  initialCount: number
+  initialCount?: number
   isAuthenticated: boolean
   viewerId: string | undefined
 }
 
-export function FollowButton({ userId, initialFollowing, initialCount, isAuthenticated, viewerId }: FollowButtonProps) {
+export function FollowButton({ userId, initialFollowing, initialCount = 0, isAuthenticated, viewerId }: FollowButtonProps) {
   const [following, setFollowing]   = useState(initialFollowing)
   const [count, setCount]           = useState(initialCount)
   const [loading, setLoading]       = useState(false)

@@ -28,10 +28,14 @@ const fetcher = (url: string) => fetch(url).then(r => r.json())
 
 export default function CommunityPage() {
   const { user, isLoading: authLoading } = useEndUser()
-  const [tab, setTab]       = useState<Tab>('feed')
-  const [search, setSearch] = useState('')
-  const [brand, setBrand]   = useState('')
-  const [sort, setSort]     = useState<SortKey>('recent')
+  const [tab, setTab]         = useState<Tab>('feed')
+  const [feedFilter, setFeedFilter] = useState<'all' | 'following'>('all')
+  const [selectedCategory, setSelectedCategory] = useState<string>('All')
+  const [search, setSearch]   = useState('')
+  const [brand, setBrand]     = useState('')
+  const [sort, setSort]       = useState<SortKey>('recent')
+
+  const CATEGORIES = ['All', 'Electronics', 'Appliances', 'Smartphones', 'Laptops', 'HVAC', 'Vehicles', 'Power tools']
 
   const { data, error, isLoading } = useSWR<ForumResponse>(
     '/api/public/manuals',
@@ -87,7 +91,7 @@ export default function CommunityPage() {
           </div>
           <nav className="flex items-center gap-1" aria-label="Community navigation">
             <Link href="/find"
-              className="text-xs px-3 py-1.5 rounded-lg font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring transition-colors"
+              className="text-xs px-3 py-1.5 rounded-lg font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring transition-colors hover:bg-background-subtle"
               style={{ color: 'var(--color-muted-foreground)' }}>
               Find a manual
             </Link>
@@ -147,16 +151,66 @@ export default function CommunityPage() {
         <div id="tabpanel-feed" role="tabpanel" aria-labelledby="tab-feed"
           className={tab === 'feed' ? 'block' : 'hidden'}>
 
-          {/* Hero */}
-          <section className="mb-5">
-            <div className="flex items-center gap-2 mb-1">
-              <Users className="w-4 h-4 shrink-0" style={{ color: 'var(--color-primary)' }} aria-hidden />
-              <h1 className="text-lg font-bold" style={{ color: 'var(--color-foreground)' }}>Community Feed</h1>
+          {/* Feed Header Controls */}
+          <section className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <div className="flex items-center gap-2 mb-1">
+                <Users className="w-4 h-4 shrink-0" style={{ color: 'var(--color-primary)' }} aria-hidden />
+                <h1 className="text-lg font-bold" style={{ color: 'var(--color-foreground)' }}>Community Feed</h1>
+              </div>
+              <p className="text-xs" style={{ color: 'var(--color-muted-foreground)' }}>
+                Share repair tips, ask questions, and help others fix their devices.
+              </p>
             </div>
-            <p className="text-sm" style={{ color: 'var(--color-muted-foreground)' }}>
-              Share repair tips, ask questions, and help others fix their devices.
-            </p>
+
+            {/* All vs Following Sub-Filter */}
+            {user && (
+              <div className="flex items-center p-0.5 rounded-xl border shrink-0"
+                style={{ backgroundColor: 'var(--color-card)', borderColor: 'var(--color-border)' }}>
+                <button
+                  type="button"
+                  onClick={() => setFeedFilter('all')}
+                  className={`text-xs px-3 py-1 rounded-lg font-semibold transition-colors ${feedFilter === 'all' ? 'shadow-sm' : ''}`}
+                  style={{
+                    backgroundColor: feedFilter === 'all' ? 'var(--color-primary-subtle)' : 'transparent',
+                    color: feedFilter === 'all' ? 'var(--color-primary)' : 'var(--color-muted-foreground)',
+                  }}>
+                  All Posts
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setFeedFilter('following')}
+                  className={`text-xs px-3 py-1 rounded-lg font-semibold transition-colors ${feedFilter === 'following' ? 'shadow-sm' : ''}`}
+                  style={{
+                    backgroundColor: feedFilter === 'following' ? 'var(--color-primary-subtle)' : 'transparent',
+                    color: feedFilter === 'following' ? 'var(--color-primary)' : 'var(--color-muted-foreground)',
+                  }}>
+                  Following
+                </button>
+              </div>
+            )}
           </section>
+
+          {/* Category Chips Scrollbar */}
+          <div className="flex items-center gap-2 overflow-x-auto pb-2 mb-4 scrollbar-none" aria-label="Filter by category">
+            {CATEGORIES.map(cat => {
+              const isSelected = selectedCategory === cat
+              return (
+                <button
+                  key={cat}
+                  type="button"
+                  onClick={() => setSelectedCategory(cat)}
+                  className="text-xs px-3 py-1 rounded-full border whitespace-nowrap font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  style={{
+                    borderColor: isSelected ? 'var(--color-primary)' : 'var(--color-border)',
+                    backgroundColor: isSelected ? 'var(--color-primary-subtle)' : 'var(--color-card)',
+                    color: isSelected ? 'var(--color-primary)' : 'var(--color-muted-foreground)',
+                  }}>
+                  {cat}
+                </button>
+              )
+            })}
+          </div>
 
           {!authLoading && !user && (
             <div className="mb-4">
@@ -166,6 +220,7 @@ export default function CommunityPage() {
           )}
 
           <PostFeed
+            filter={feedFilter}
             currentUser={currentUser}
             isAuthenticated={!!user}
           />

@@ -112,6 +112,12 @@ export default function GetStartedPage() {
               <ArrowRight className="w-4 h-4" aria-hidden="true" />
             </Link>
             <Link
+              href="/#find-your-product"
+              className="btn-outline text-sm text-center flex items-center justify-center gap-2 border-slate-300 text-slate-700 hover:bg-slate-50"
+            >
+              Continue as guest
+            </Link>
+            <Link
               href="/user/sign-in"
               className="btn-ghost text-sm text-center"
               style={{ color: 'var(--color-muted-foreground)' }}

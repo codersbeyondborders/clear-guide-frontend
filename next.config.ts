@@ -1,8 +1,10 @@
 import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
+  output: 'standalone',
   reactStrictMode: true,
   allowedDevOrigins: ['vm-next-js-vercel-project.vusercontent.net'],
+
 
   // ── Images ────────────────────────────────────────────────────────────────
   // Serve WebP/AVIF automatically; allow Blob store domain for thumbnails.
