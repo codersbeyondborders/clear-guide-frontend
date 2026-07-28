@@ -1,13 +1,13 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { Eye, EyeOff, Loader2, BookOpen, Building2, ArrowLeft } from 'lucide-react'
 import { signInWithEmailAndPassword, sendPasswordResetEmail } from 'firebase/auth'
 import { auth } from '@/lib/firebase'
 
-export default function ManufacturerSignInPage() {
+function ManufacturerSignInContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const redirectTo = searchParams.get('redirectTo') ?? '/manufacturer/dashboard'
@@ -293,5 +293,19 @@ export default function ManufacturerSignInPage() {
         </div>
       </main>
     </div>
+  )
+}
+
+export default function ManufacturerSignInPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: 'var(--color-background-subtle)' }}>
+          <Loader2 className="w-8 h-8 animate-spin" style={{ color: 'var(--color-primary)' }} />
+        </div>
+      }
+    >
+      <ManufacturerSignInContent />
+    </Suspense>
   )
 }

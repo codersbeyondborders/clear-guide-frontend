@@ -265,7 +265,7 @@ export default function ThreadDetailPage() {
   const thread  = data?.data?.thread ?? null
   const replies = data?.data?.replies ?? []
 
-  const isThreadOwner = !!user && thread?.userId === user.id
+  const isThreadOwner = !!user && thread?.userId === user.uid
 
   if (isLoading) {
     return (

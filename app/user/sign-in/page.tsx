@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { Eye, EyeOff, Loader2, BookOpen, UserRound } from 'lucide-react'
@@ -31,7 +31,7 @@ function GoogleButton({ onClick, loading }: { onClick: () => void; loading: bool
   )
 }
 
-export default function UserSignInPage() {
+function UserSignInContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const returnTo = searchParams.get('returnTo') ?? '/user'
@@ -212,5 +212,19 @@ export default function UserSignInPage() {
         </p>
       </div>
     </main>
+  )
+}
+
+export default function UserSignInPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: 'var(--color-background-subtle)' }}>
+          <Loader2 className="w-8 h-8 animate-spin" style={{ color: 'var(--color-primary)' }} />
+        </div>
+      }
+    >
+      <UserSignInContent />
+    </Suspense>
   )
 }

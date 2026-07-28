@@ -63,6 +63,7 @@ const nextConfig: NextConfig = {
 
   // ── Turbopack — split heavy charting library into its own chunk ─────────────
   turbopack: {
+    root: __dirname,
     resolveAlias: {},
   },
 }

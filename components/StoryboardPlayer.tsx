@@ -30,8 +30,8 @@ export function StoryboardPlayer({ frames, title, onDownloadRequest }: Storyboar
   const duration = frames.length > 0 ? Math.max(...frames.map(f => f.startTime + f.duration)) : 0
 
   // Animation Loop Variables
-  const animationRef = useRef<number>()
-  const lastTimeRef = useRef<number>()
+  const animationRef = useRef<number | undefined>(undefined)
+  const lastTimeRef = useRef<number | undefined>(undefined)
   const timeRef = useRef(0)
 
   // Pre-load images
