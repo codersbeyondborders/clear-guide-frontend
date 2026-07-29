@@ -6,6 +6,8 @@ import {
   Camera, Upload, Loader2, AlertCircle, X, CheckCircle2,
   MessageCircle, Star, ChevronRight, ExternalLink, Lightbulb, ScanSearch, Info,
 } from 'lucide-react'
+import { authFetch } from "@/lib/apiClient"
+
 
 const MAX_BYTES = 8 * 1024 * 1024
 
@@ -76,23 +78,34 @@ export function PhotoSearch() {
     setPreview(URL.createObjectURL(file))
 
     try {
-      // 1. Upload to private Blob.
+      // 1. Upload via Signed URL
       setPhase('uploading')
-      const form = new FormData()
-      form.append('file', file)
-      const upRes = await fetch('/api/find/upload', { method: 'POST', body: form })
-      if (!upRes.ok) {
-        const d = (await upRes.json()) as { error?: string }
-        throw new Error(d.error ?? 'Upload failed.')
+      const signRes = await authFetch('/api/upload/signed-url', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ fileName: file.name, contentType: file.type })
+      })
+      if (!signRes.ok) {
+        const d = (await signRes.json()) as { error?: string }
+        throw new Error(d.error ?? 'Failed to get upload URL.')
       }
-      const { url, contentType } = (await upRes.json()) as { url: string; contentType: string }
+      const { signedUrl, publicUrl } = (await signRes.json()) as { signedUrl: string; publicUrl: string }
+
+      const putRes = await fetch(signedUrl, {
+        method: 'PUT',
+        headers: { 'Content-Type': file.type },
+        body: file,
+      })
+      if (!putRes.ok) {
+        throw new Error('Failed to upload file to storage.')
+      }
 
       // 2. Identify.
       setPhase('identifying')
-      const idRes = await fetch('/api/find/identify', {
+      const idRes = await authFetch('/api/manuals/visual-search', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ url, contentType }),
+        body: JSON.stringify({ image: publicUrl }),
       })
       if (!idRes.ok) {
         const d = (await idRes.json()) as { error?: string }

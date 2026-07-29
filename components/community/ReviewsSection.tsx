@@ -8,6 +8,7 @@ import { ReviewCard } from './ReviewCard'
 import { GuestBanner } from './GuestBanner'
 import type { ProductReview } from '@/lib/types'
 import type { User } from 'firebase/auth'
+import { authFetch } from "@/lib/apiClient"
 
 // ---------------------------------------------------------------------------
 // Mock data — mirrors a real DB payload for loading state
@@ -98,7 +99,7 @@ function WriteReviewForm({ manualId, userId, onSubmitted }: { manualId: string; 
     setError(null)
     setLoading(true)
     try {
-      const res = await fetch('/api/community/reviews', {
+      const res = await authFetch('/api/community/reviews', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ manualId, rating, title: title.trim() || null, body: body.trim() }),
@@ -225,7 +226,7 @@ interface ReviewsSectionProps {
   currentPath: string
 }
 
-const fetcher = (url: string) => fetch(url).then(r => r.json())
+const fetcher = (url: string) => authFetch(url).then(r => r.json())
 
 export function ReviewsSection({ manualId, user, currentPath }: ReviewsSectionProps) {
   const swrKey = `/api/community/reviews?manualId=${manualId}`
@@ -239,7 +240,7 @@ export function ReviewsSection({ manualId, user, currentPath }: ReviewsSectionPr
   const dist    = [5, 4, 3, 2, 1].map(s => ({ star: s, count: reviews.filter(r => r.rating === s).length }))
 
   const handleHelpful = useCallback(async (reviewId: string) => {
-    await fetch(`/api/community/reviews/${reviewId}/helpful`, { method: 'POST' })
+    await authFetch(`/api/community/reviews/${reviewId}/helpful`, { method: 'POST' })
     mutate(swrKey)
   }, [swrKey])
 

@@ -3,6 +3,7 @@
 import { useRef, useState } from 'react'
 import { Camera, Loader2, Check, AlertCircle, Plus, X } from 'lucide-react'
 import type { HubProfile } from '@/lib/types'
+import { authFetch } from "@/lib/apiClient"
 
 const SPECIALTIES = [
   'Electronics', 'Appliances', 'Smartphones', 'Laptops', 'HVAC',
@@ -55,13 +56,13 @@ export function ProfileEditForm({ profile, onSaved }: ProfileEditFormProps) {
     if (avatarFile) {
       const fd = new FormData()
       fd.append('avatar', avatarFile)
-      const res = await fetch('/api/hub/profiles/me', { method: 'PATCH', body: fd })
+      const res = await authFetch('/api/hub/profiles/me', { method: 'PATCH', body: fd })
       const json = await res.json()
       if (!res.ok) { setServerError(json.error ?? 'Avatar upload failed'); setSaving(false); return }
     }
 
     // Patch profile fields
-    const res = await fetch('/api/hub/profiles/me', {
+    const res = await authFetch('/api/hub/profiles/me', {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({

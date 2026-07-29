@@ -5,6 +5,7 @@ import {
   Plus, Trash2, GripVertical, Upload, X, FileText, ChevronDown, ChevronUp,
 } from 'lucide-react'
 import type { Section } from '@/context/ManualEditorContext'
+import { authFetch } from "@/lib/apiClient"
 
 // ---------------------------------------------------------------------------
 // Section Builder
@@ -244,20 +245,30 @@ export function FileUpload({ onFile, currentFileName, onClear, manualId = 'new' 
     setUploading(true)
 
     try {
-      const formData = new FormData()
-      formData.append('file', file)
-      formData.append('manualId', manualId)
-      formData.append('type', 'manual')
+      const signRes = await authFetch('/api/upload/signed-url', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ fileName: file.name, contentType: file.type })
+      })
 
-      const res = await fetch('/api/upload', { method: 'POST', body: formData })
-
-      if (!res.ok) {
-        const err = await res.json().catch(() => ({}))
-        throw new Error((err as { error?: string }).error ?? 'Upload failed')
+      if (!signRes.ok) {
+        const err = await signRes.json().catch(() => ({}))
+        throw new Error((err as { error?: string }).error ?? 'Failed to get upload URL')
       }
 
-      const data = await res.json() as { pathname?: string }
-      onFile(file.name, file.size, data.pathname)
+      const { signedUrl, publicUrl } = await signRes.json() as { signedUrl: string, publicUrl: string }
+
+      const putRes = await fetch(signedUrl, {
+        method: 'PUT',
+        headers: { 'Content-Type': file.type },
+        body: file,
+      })
+
+      if (!putRes.ok) {
+        throw new Error('Upload to storage failed')
+      }
+
+      onFile(file.name, file.size, publicUrl)
     } catch (err) {
       setUploadError(err instanceof Error ? err.message : 'Upload failed. Please try again.')
     } finally {

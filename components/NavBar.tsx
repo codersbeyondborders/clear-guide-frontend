@@ -10,6 +10,7 @@ const MAIN_NAV_LINKS = [
   { label: 'Features',     href: '#features'          },
   { label: 'Pricing',      href: '#pricing'           },
   { label: 'Repair Hub',   href: '/community'         },
+  { label: 'How to Fix',   href: '/tools/how-to-fix'  },
   { label: 'FAQ',          href: '#faq'               },
   { label: 'Contact',      href: '#contact'           },
 ]

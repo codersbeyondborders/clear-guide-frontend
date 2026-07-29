@@ -8,6 +8,7 @@ import type { HubPost } from '@/lib/types'
 import { MediaGrid } from './MediaGrid'
 import { LikeButton, BookmarkButton, CommentTrigger, ShareButton } from './EngagementButtons'
 import { PostEditModal } from './PostEditModal'
+import { authFetch } from "@/lib/apiClient"
 
 interface PostCardProps {
   post: HubPost
@@ -34,7 +35,7 @@ export function PostCard({ post: initialPost, viewerId, isAuthenticated, onDelet
   async function handleDelete() {
     if (deleting) return
     setDeleting(true)
-    const res = await fetch(`/api/hub/posts/${post.id}`, { method: 'DELETE' })
+    const res = await authFetch(`/api/hub/posts/${post.id}`, { method: 'DELETE' })
     if (res.ok) {
       setDeleted(true)
       onDelete?.(post.id)

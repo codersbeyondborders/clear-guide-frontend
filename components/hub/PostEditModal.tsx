@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from 'react'
 import { X, Loader2, Save, Wrench } from 'lucide-react'
 import type { HubPost, MediaAttachment } from '@/lib/types'
 import { MediaUploader } from './MediaUploader'
+import { authFetch } from "@/lib/apiClient"
 
 interface PostEditModalProps {
   post: HubPost
@@ -56,7 +57,7 @@ export function PostEditModal({ post, isOpen, onClose, onUpdated }: PostEditModa
     if (difficulty) updatedTags.push(difficulty)
 
     try {
-      const res = await fetch(`/api/hub/posts/${post.id}`, {
+      const res = await authFetch(`/api/hub/posts/${post.id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

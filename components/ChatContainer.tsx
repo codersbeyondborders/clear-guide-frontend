@@ -3,6 +3,7 @@
 import { useRef, useEffect, useState } from 'react'
 import { Bot, User } from 'lucide-react'
 import { useAccessibility } from '@/context/AccessibilityContext'
+import { authFetch } from "@/lib/apiClient"
 
 interface Message {
   id: string
@@ -185,7 +186,7 @@ export function ChatContainer({ manualId, productName }: ChatContainerProps) {
     }))
 
     try {
-      const res = await fetch('/api/chat', {
+      const res = await authFetch('/api/chat', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

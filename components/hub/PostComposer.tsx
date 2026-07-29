@@ -5,6 +5,7 @@ import { Link2, X, Loader2, Send } from 'lucide-react'
 import { MediaUploader } from './MediaUploader'
 import type { MediaAttachment, HubPost } from '@/lib/types'
 import Link from 'next/link'
+import { authFetch } from "@/lib/apiClient"
 
 interface PostComposerProps {
   currentUser: { id: string; name: string; avatarUrl: string | null } | null
@@ -41,7 +42,7 @@ export function PostComposer({ currentUser, onPost, manualId, placeholder }: Pos
     setSubmitting(true)
     setError('')
 
-    const res = await fetch('/api/hub/posts', {
+    const res = await authFetch('/api/hub/posts', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ body: body.trim(), media, manualId: manualId ?? undefined, linkUrl: linkUrl.trim() || undefined }),

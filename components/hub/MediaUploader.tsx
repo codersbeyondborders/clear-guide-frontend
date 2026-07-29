@@ -3,6 +3,7 @@
 import { useRef, useState } from 'react'
 import { ImageIcon, Video, FileText, X, Loader2, AlertCircle } from 'lucide-react'
 import type { MediaAttachment } from '@/lib/types'
+import { authFetch } from "@/lib/apiClient"
 
 interface MediaUploaderProps {
   attachments: MediaAttachment[]
@@ -70,7 +71,7 @@ export function MediaUploader({ attachments, onChange, maxFiles = 8, disabled }:
     for (const file of Array.from(files)) {
       const fd = new FormData()
       fd.append('file', file)
-      const res = await fetch('/api/hub/upload', { method: 'POST', body: fd })
+      const res = await authFetch('/api/hub/upload', { method: 'POST', body: fd })
       if (!res.ok) {
         const j = await res.json().catch(() => ({}))
         setError(j.error ?? 'Upload failed')

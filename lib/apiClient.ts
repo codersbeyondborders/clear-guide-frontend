@@ -23,3 +23,17 @@ apiClient.interceptors.request.use(
     return Promise.reject(error);
   }
 );
+
+// A native fetch wrapper for easy migration of existing fetch() calls
+export async function authFetch(input: string | URL | Request, init?: RequestInit): Promise<Response> {
+  const headers = new Headers(init?.headers);
+  if (auth.currentUser) {
+    try {
+      const token = await auth.currentUser.getIdToken();
+      headers.set('Authorization', `Bearer ${token}`);
+    } catch (e) {
+      console.warn('Failed to get Firebase token for authFetch', e);
+    }
+  }
+  return fetch(input, { ...init, headers });
+}

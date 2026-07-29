@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { Heart, MessageCircle, Bookmark, Share2, UserPlus, UserCheck } from 'lucide-react'
 import { useRouter } from 'next/navigation'
+import { authFetch } from "@/lib/apiClient"
 
 // ---------- LikeButton ----------
 interface LikeButtonProps {
@@ -27,7 +28,7 @@ export function LikeButton({ targetType, targetId, initialCount, initialLiked, i
     setLiked(p => !p)
     setCount(p => liked ? Math.max(0, p - 1) : p + 1)
     setLoading(true)
-    const res = await fetch('/api/hub/likes', {
+    const res = await authFetch('/api/hub/likes', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ targetType, targetId }),
@@ -79,7 +80,7 @@ export function BookmarkButton({ postId, initialBookmarked, isAuthenticated }: B
     if (loading) return
     setBookmarked(p => !p)
     setLoading(true)
-    const res = await fetch('/api/hub/bookmarks', {
+    const res = await authFetch('/api/hub/bookmarks', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ postId }),
@@ -169,7 +170,7 @@ export function FollowButton({ userId, initialFollowing, initialCount = 0, isAut
     setFollowing(p => !p)
     setCount(p => following ? Math.max(0, p - 1) : p + 1)
     setLoading(true)
-    const res = await fetch('/api/hub/follows', {
+    const res = await authFetch('/api/hub/follows', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ followingId: userId }),

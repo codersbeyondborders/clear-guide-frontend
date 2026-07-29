@@ -7,8 +7,9 @@ import { Loader2, Send, AlertCircle } from 'lucide-react'
 import type { HubComment } from '@/lib/types'
 import { LikeButton } from './EngagementButtons'
 import useSWR from 'swr'
+import { authFetch } from "@/lib/apiClient"
 
-const fetcher = (url: string) => fetch(url).then(r => r.json())
+const fetcher = (url: string) => authFetch(url).then(r => r.json())
 
 interface CommentThreadProps {
   postId: string
@@ -40,7 +41,7 @@ function CommentItem({
     e.preventDefault()
     if (!replyBody.trim() || posting) return
     setPosting(true)
-    const res = await fetch(`/api/hub/posts/${postId}/comments`, {
+    const res = await authFetch(`/api/hub/posts/${postId}/comments`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ body: replyBody.trim(), parentId: comment.id }),
@@ -163,7 +164,7 @@ export function CommentThread({ postId, currentUser, isAuthenticated }: CommentT
     if (!body.trim() || posting) return
     setPosting(true)
     setPostError('')
-    const res = await fetch(`/api/hub/posts/${postId}/comments`, {
+    const res = await authFetch(`/api/hub/posts/${postId}/comments`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ body: body.trim() }),

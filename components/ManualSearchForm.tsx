@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Search, Loader2, AlertCircle, ChevronRight } from 'lucide-react'
+import { authFetch } from "@/lib/apiClient"
 
 interface SearchResult {
   id: string
@@ -43,7 +44,7 @@ export function ManualSearchForm() {
       const params = new URLSearchParams({ brand: brand.trim(), model: model.trim() })
       if (serial.trim()) params.set('serial', serial.trim())
 
-      const res = await fetch(`/api/public/manuals/search?${params}`)
+      const res = await authFetch(`/api/public/manuals/search?${params}`)
       if (!res.ok) {
         const data = await res.json() as { error?: string }
         throw new Error(data.error ?? 'Search failed.')

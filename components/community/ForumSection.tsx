@@ -8,6 +8,7 @@ import { GuestBanner } from './GuestBanner'
 import { PostFeed } from '@/components/hub/PostFeed'
 import type { ForumThread } from '@/lib/types'
 import type { User } from 'firebase/auth'
+import { authFetch } from "@/lib/apiClient"
 
 // ---------------------------------------------------------------------------
 // Mock data — mirrors a real DB payload
@@ -74,7 +75,7 @@ function NewThreadForm({ manualId, onSubmitted }: { manualId: string; onSubmitte
     setError(null)
     setLoading(true)
     try {
-      const res = await fetch('/api/community/threads', {
+      const res = await authFetch('/api/community/threads', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ manualId, title: title.trim(), body: body.trim() }),
@@ -207,7 +208,7 @@ interface ForumSectionProps {
   currentPath: string
 }
 
-const fetcher = (url: string) => fetch(url).then(r => r.json())
+const fetcher = (url: string) => authFetch(url).then(r => r.json())
 
 export function ForumSection({ manualId, user, currentPath }: ForumSectionProps) {
   const swrKey = `/api/community/threads?manualId=${manualId}`

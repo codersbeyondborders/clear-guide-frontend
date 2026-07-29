@@ -2,6 +2,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { Send, Bot, User, Mic, MicOff, Volume2, VolumeX } from 'lucide-react';
+import { authFetch } from "@/lib/apiClient"
 
 interface Message {
   id: string;
@@ -47,7 +48,7 @@ export function AIChatSupport({ manualId, highContrast = false, audioEnabled = f
     }))
 
     try {
-      const response = await fetch('/api/chat', {
+      const response = await authFetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Accept': 'text/event-stream' },
         body: JSON.stringify({ message: text, manualId, history }),

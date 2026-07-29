@@ -3,7 +3,7 @@ import type { NextConfig } from 'next'
 const nextConfig: NextConfig = {
   output: 'standalone',
   reactStrictMode: true,
-  allowedDevOrigins: ['vm-next-js-vercel-project.vusercontent.net'],
+  allowedDevOrigins: [],
 
 
   // ── Images ────────────────────────────────────────────────────────────────
@@ -12,8 +12,7 @@ const nextConfig: NextConfig = {
     formats: ['image/avif', 'image/webp'],
     remotePatterns: [
       {
-        protocol: 'https',
-        hostname: '*.public.blob.vercel-storage.com',
+        hostname: 'storage.googleapis.com',
       },
     ],
     // Stale cached images are served while Next.js re-optimises in background
@@ -45,9 +44,9 @@ const nextConfig: NextConfig = {
               "script-src 'self' 'unsafe-inline' 'unsafe-eval'", // Next.js requires unsafe-eval in dev
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
               "font-src 'self' https://fonts.gstatic.com",
-              "img-src 'self' data: blob: https://*.public.blob.vercel-storage.com",
-              "media-src 'self' blob: https://*.public.blob.vercel-storage.com",
-              "connect-src 'self' https://*.vercel-storage.com https://*.googleapis.com https://identitytoolkit.googleapis.com",
+              "img-src 'self' data: blob: https://storage.googleapis.com",
+              "media-src 'self' blob: https://storage.googleapis.com",
+              "connect-src 'self' https://storage.googleapis.com https://*.googleapis.com https://identitytoolkit.googleapis.com",
               "frame-ancestors 'self'",
             ].join('; '),
           },
@@ -59,6 +58,16 @@ const nextConfig: NextConfig = {
         headers: [
           { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
         ],
+      },
+    ]
+  },
+
+  // ── Proxy API Requests ────────────────────────────────────────────────────
+  async rewrites() {
+    return [
+      {
+        source: '/api/:path*',
+        destination: `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/:path*`,
       },
     ]
   },

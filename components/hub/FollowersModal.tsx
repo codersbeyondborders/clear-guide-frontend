@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { X, Loader2, Users } from 'lucide-react'
 import { FollowButton } from './EngagementButtons'
+import { authFetch } from "@/lib/apiClient"
 
 interface UserSummary {
   id: string
@@ -40,7 +41,7 @@ export function FollowersModal({
     setLoading(true)
     setError('')
 
-    fetch(`/api/hub/profiles/${userId}/${type}`)
+    authFetch(`/api/hub/profiles/${userId}/${type}`)
       .then(r => r.json())
       .then(json => {
         if (json.error) setError(json.error)

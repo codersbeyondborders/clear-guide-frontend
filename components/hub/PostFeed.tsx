@@ -6,8 +6,9 @@ import useSWRInfinite from 'swr/infinite'
 import type { HubPost } from '@/lib/types'
 import { PostCard } from './PostCard'
 import { PostComposer } from './PostComposer'
+import { authFetch } from "@/lib/apiClient"
 
-const fetcher = (url: string) => fetch(url).then(r => r.json())
+const fetcher = (url: string) => authFetch(url).then(r => r.json())
 
 interface PostFeedProps {
   filter?: 'all' | 'following'
