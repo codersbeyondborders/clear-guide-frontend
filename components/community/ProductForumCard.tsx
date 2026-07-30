@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import { BookOpen, MessageCircle, Globe, ChevronRight } from 'lucide-react'
 import { StarRating } from '@/components/community/StarRating'
 import type { PublicProduct } from '@/lib/types'
@@ -17,13 +18,12 @@ export function ProductForumCard({ product }: { product: PublicProduct }) {
     >
       {/* Cover / thumbnail */}
       <div
-        className="h-32 flex items-center justify-center shrink-0"
+        className="relative h-32 flex items-center justify-center shrink-0"
         style={{ backgroundColor: 'var(--color-primary-subtle)' }}
         aria-hidden="true"
       >
         {product.coverImage ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img src={product.coverImage} alt="" className="w-full h-full object-cover" />
+          <Image src={product.coverImage} alt="" fill className="object-cover" />
         ) : (
           <BookOpen className="w-8 h-8" style={{ color: 'var(--color-primary)' }} />
         )}

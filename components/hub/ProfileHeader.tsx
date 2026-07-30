@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { MapPin, Globe, Wrench, Calendar } from 'lucide-react'
 import { format } from 'date-fns'
 import type { HubProfile } from '@/lib/types'
@@ -28,11 +29,10 @@ export function ProfileHeader({ profile, viewerId, isAuthenticated, isFollowing 
         <div className="px-5 pb-5">
           {/* Avatar + actions row */}
           <div className="flex items-end justify-between gap-3 -mt-8 mb-3">
-            <div className="w-16 h-16 rounded-full border-4 overflow-hidden flex items-center justify-center text-xl font-bold select-none"
+            <div className="relative w-16 h-16 rounded-full border-4 overflow-hidden flex items-center justify-center text-xl font-bold select-none"
               style={{ background: 'var(--color-primary)', color: '#04140e', borderColor: 'var(--color-card)' }}>
               {profile.avatarUrl
-                // eslint-disable-next-line @next/next/no-img-element
-                ? <img src={profile.avatarUrl} alt={`${profile.displayName ?? profile.name}'s avatar`} className="w-full h-full object-cover" />
+                ? <Image src={profile.avatarUrl} alt={`${profile.displayName ?? profile.name}'s avatar`} fill className="object-cover" priority />
                 : (profile.displayName ?? profile.name)[0]?.toUpperCase()
               }
             </div>

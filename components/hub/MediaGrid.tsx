@@ -1,6 +1,7 @@
 'use client'
 
 import { FileText, Video, ExternalLink } from 'lucide-react'
+import Image from 'next/image'
 import type { MediaAttachment, LinkMeta } from '@/lib/types'
 
 interface MediaGridProps {
@@ -33,10 +34,8 @@ export function MediaGrid({ media, linkUrl, linkMeta }: MediaGridProps) {
               style={{ paddingTop: images.length === 1 ? '52%' : '100%' }}
               role="listitem"
               aria-label={img.name ?? `Image ${i + 1}`}>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={img.url} alt={img.name ?? `Image ${i + 1}`}
-                className="absolute inset-0 w-full h-full object-cover"
-                loading="lazy"
+              <Image src={img.url} alt={img.name ?? `Image ${i + 1}`}
+                fill className="object-cover"
               />
               {i === 3 && images.length > 4 && (
                 <div className="absolute inset-0 flex items-center justify-center text-white text-lg font-bold"
@@ -85,8 +84,9 @@ export function MediaGrid({ media, linkUrl, linkMeta }: MediaGridProps) {
           className="flex items-start gap-3 px-3 py-3 rounded-xl border transition-colors hover:border-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           style={{ borderColor: 'var(--color-border)', background: 'var(--color-background-subtle)' }}>
           {linkMeta?.image && (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={linkMeta.image} alt="" className="w-16 h-16 rounded-lg object-cover shrink-0" loading="lazy" />
+            <div className="relative w-16 h-16 rounded-lg overflow-hidden shrink-0">
+              <Image src={linkMeta.image} alt="" fill className="object-cover" />
+            </div>
           )}
           <div className="flex-1 min-w-0">
             {linkMeta?.domain && (

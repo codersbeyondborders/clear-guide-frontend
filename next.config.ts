@@ -46,7 +46,7 @@ const nextConfig: NextConfig = {
               "font-src 'self' https://fonts.gstatic.com",
               "img-src 'self' data: blob: https://storage.googleapis.com",
               "media-src 'self' blob: https://storage.googleapis.com",
-              "connect-src 'self' https://storage.googleapis.com https://*.googleapis.com https://identitytoolkit.googleapis.com",
+              "connect-src 'self' http://localhost:* https://*.run.app https://storage.googleapis.com https://*.googleapis.com https://identitytoolkit.googleapis.com",
               "frame-ancestors 'self'",
             ].join('; '),
           },

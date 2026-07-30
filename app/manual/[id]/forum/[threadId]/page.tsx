@@ -44,48 +44,6 @@ function Avatar({ name, image }: { name?: string; image?: string | null }) {
 }
 
 // ---------------------------------------------------------------------------
-// Mock data
-// ---------------------------------------------------------------------------
-const MOCK_DATA = {
-  thread: {
-    id: 'mock-t1',
-    manualId: '',
-    userId: 'u1',
-    title: 'Calibration mode not working after firmware update',
-    body: 'After updating to firmware 2.3, the calibration procedure described in Section 6 no longer works. The button sequence seems to have changed. Has anyone found a workaround?',
-    isPinned: true,
-    isSolved: false,
-    replyCount: 2,
-    createdAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 5).toISOString(),
-    updatedAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 4).toISOString(),
-    author: { name: 'Aiko T.', image: null },
-    manualName: 'Product Manual',
-    productBrand: null,
-  } as ForumThread & { manualName: string | null; productBrand: string | null },
-  replies: [
-    {
-      id: 'mock-r1',
-      threadId: 'mock-t1',
-      userId: 'u2',
-      body: 'I had the same issue. The new button sequence for firmware 2.3 is: hold MENU + UP for 3 seconds instead of just MENU. Not documented yet but the manufacturer confirmed on Twitter.',
-      isSolution: true,
-      createdAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 4).toISOString(),
-      updatedAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 4).toISOString(),
-      author: { name: 'Marcus L.', image: null },
-    },
-    {
-      id: 'mock-r2',
-      threadId: 'mock-t1',
-      userId: 'u3',
-      body: 'Confirmed — the MENU + UP sequence works for me on firmware 2.3.1 as well. Thanks Marcus!',
-      isSolution: false,
-      createdAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 3).toISOString(),
-      updatedAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 3).toISOString(),
-      author: { name: 'Elena R.', image: null },
-    },
-  ] as ForumReply[],
-}
-
 // ---------------------------------------------------------------------------
 // Reply card
 // ---------------------------------------------------------------------------
@@ -258,7 +216,6 @@ export default function ThreadDetailPage() {
     data: { thread: ForumThread & { manualName: string | null; productBrand: string | null }; replies: ForumReply[] } | null
     error: string | null
   }>(swrKey, fetcher, {
-    fallbackData: { data: { thread: { ...MOCK_DATA.thread, manualId }, replies: MOCK_DATA.replies }, error: null },
     revalidateOnFocus: false,
   })
 

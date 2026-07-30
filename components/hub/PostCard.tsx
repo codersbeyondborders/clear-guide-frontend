@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { formatDistanceToNow } from 'date-fns'
 import { Wrench, MoreHorizontal, Trash2, Pencil } from 'lucide-react'
 import type { HubPost } from '@/lib/types'
@@ -64,11 +65,10 @@ export function PostCard({ post: initialPost, viewerId, isAuthenticated, onDelet
         <div className="flex items-start gap-3 px-4 pt-4">
           <Link href={profileHref} aria-label={`View ${post.author.name}'s profile`}
             className="shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-full">
-            <div className="w-10 h-10 rounded-full overflow-hidden flex items-center justify-center text-sm font-bold select-none"
+            <div className="relative w-10 h-10 rounded-full overflow-hidden flex items-center justify-center text-sm font-bold select-none"
               style={{ background: 'var(--color-primary)', color: '#04140e' }}>
               {post.author.avatarUrl
-                // eslint-disable-next-line @next/next/no-img-element
-                ? <img src={post.author.avatarUrl} alt="" className="w-full h-full object-cover" />
+                ? <Image src={post.author.avatarUrl} alt="" fill className="object-cover" />
                 : (post.author.name[0] ?? 'U').toUpperCase()
               }
             </div>

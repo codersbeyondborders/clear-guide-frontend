@@ -11,47 +11,6 @@ import type { User } from 'firebase/auth'
 import { authFetch } from "@/lib/apiClient"
 
 // ---------------------------------------------------------------------------
-// Mock data — mirrors a real DB payload for loading state
-// ---------------------------------------------------------------------------
-const MOCK_REVIEWS: ProductReview[] = [
-  {
-    id: 'mock-1',
-    manualId: '',
-    userId: 'u1',
-    rating: 5,
-    title: 'Crystal-clear instructions',
-    body: 'Everything was laid out perfectly. Set up took about 10 minutes following this guide step by step.',
-    helpfulCount: 14,
-    createdAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 3).toISOString(),
-    updatedAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 3).toISOString(),
-    author: { name: 'Sarah M.', image: null },
-  },
-  {
-    id: 'mock-2',
-    manualId: '',
-    userId: 'u2',
-    rating: 4,
-    title: 'Good overall, minor gaps',
-    body: 'Most sections are thorough. A few steps around initial calibration could be more detailed, but nothing that stopped me from completing setup.',
-    helpfulCount: 7,
-    createdAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 10).toISOString(),
-    updatedAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 10).toISOString(),
-    author: { name: 'James T.', image: null },
-  },
-  {
-    id: 'mock-3',
-    manualId: '',
-    userId: 'u3',
-    rating: 3,
-    title: 'Decent but could be clearer',
-    body: 'The AR mode was a game-changer for assembly. Text instructions are a bit dense in sections 3 and 4.',
-    helpfulCount: 3,
-    createdAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 21).toISOString(),
-    updatedAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 21).toISOString(),
-    author: { name: 'Priya K.', image: null },
-  },
-]
-
 // ---------------------------------------------------------------------------
 // Rating distribution bar
 // ---------------------------------------------------------------------------
@@ -231,7 +190,6 @@ const fetcher = (url: string) => authFetch(url).then(r => r.json())
 export function ReviewsSection({ manualId, user, currentPath }: ReviewsSectionProps) {
   const swrKey = `/api/community/reviews?manualId=${manualId}`
   const { data, error, isLoading } = useSWR<{ data: ProductReview[] }>(swrKey, fetcher, {
-    fallbackData: { data: MOCK_REVIEWS.map(r => ({ ...r, manualId })) },
     revalidateOnFocus: false,
   })
 

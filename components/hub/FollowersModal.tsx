@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { X, Loader2, Users } from 'lucide-react'
 import { FollowButton } from './EngagementButtons'
 import { authFetch } from "@/lib/apiClient"
@@ -50,6 +51,16 @@ export function FollowersModal({
       .catch(() => setError('Failed to load list'))
       .finally(() => setLoading(false))
   }, [isOpen, userId, type])
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose()
+    }
+    if (isOpen) {
+      document.addEventListener('keydown', handleKeyDown)
+    }
+    return () => document.removeEventListener('keydown', handleKeyDown)
+  }, [isOpen, onClose])
 
   if (!isOpen) return null
 
@@ -112,11 +123,10 @@ export function FollowersModal({
             return (
               <div key={u.id} className="flex items-center justify-between gap-3 p-2 rounded-xl hover:bg-background-subtle transition-colors">
                 <Link href={profileHref} onClick={onClose} className="flex items-center gap-3 min-w-0 flex-1">
-                  <div className="w-9 h-9 rounded-full overflow-hidden flex items-center justify-center text-xs font-bold shrink-0 select-none"
+                  <div className="relative w-9 h-9 rounded-full overflow-hidden flex items-center justify-center text-xs font-bold shrink-0 select-none"
                     style={{ background: 'var(--color-primary)', color: '#04140e' }}>
                     {u.avatarUrl
-                      // eslint-disable-next-line @next/next/no-img-element
-                      ? <img src={u.avatarUrl} alt="" className="w-full h-full object-cover" />
+                      ? <Image src={u.avatarUrl} alt="" fill className="object-cover" />
                       : (u.name[0] || 'U').toUpperCase()
                     }
                   </div>

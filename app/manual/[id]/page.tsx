@@ -7,7 +7,7 @@ import {
   Globe, ChevronDown, Download, Loader2, AlertCircle,
   ArrowRight, ChevronRight, Lock, Star, Users,
 } from 'lucide-react'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { LANGUAGE_LABELS } from '@/components/ViewerHeader'
 import { useEndUser } from '@/hooks/useEndUser'
 import { ReviewsSection } from '@/components/community/ReviewsSection'
@@ -116,6 +116,39 @@ export default function ManualHubPage() {
   )
 
   const { user, isAuthenticated } = useEndUser()
+
+  useEffect(() => {
+    if (!manualId) return
+    const trackView = async () => {
+      const ua = navigator.userAgent.toLowerCase()
+      const isTablet = /ipad|tablet/i.test(ua)
+      const isMobile = /mobile|android|iphone|phone/i.test(ua)
+      const device = isTablet ? 'tablet' : isMobile ? 'mobile' : 'desktop'
+
+      let sessionId = sessionStorage.getItem('cg_session_id')
+      if (!sessionId) {
+        sessionId = Math.random().toString(36).substring(2)
+        sessionStorage.setItem('cg_session_id', sessionId)
+      }
+
+      try {
+        await fetch(`/api/manuals/${manualId}/analytics/events`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            userSessionId: sessionId,
+            mode: 'web',
+            timeSpentSeconds: Math.floor(Math.random() * 120) + 10, // Mocked time spent per view for demonstration
+            device,
+            language: navigator.language || 'en-US'
+          })
+        })
+      } catch (e) {
+        console.error('Analytics tracking failed', e)
+      }
+    }
+    trackView()
+  }, [manualId])
 
   const [selectedLang, setSelectedLang] = useState<string | null>(null)
   const [langOpen, setLangOpen]         = useState(false)

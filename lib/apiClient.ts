@@ -24,16 +24,37 @@ apiClient.interceptors.request.use(
   }
 );
 
+// Helper to await Firebase auth initialization
+const getFirebaseToken = (): Promise<string | null> => {
+  return new Promise((resolve) => {
+    if (auth.currentUser) {
+      auth.currentUser.getIdToken().then(resolve).catch(() => resolve(null));
+      return;
+    }
+    const unsubscribe = auth.onAuthStateChanged(async (user) => {
+      unsubscribe();
+      if (user) {
+        try {
+          const token = await user.getIdToken();
+          resolve(token);
+        } catch (e) {
+          resolve(null);
+        }
+      } else {
+        resolve(null);
+      }
+    });
+  });
+};
+
 // A native fetch wrapper for easy migration of existing fetch() calls
 export async function authFetch(input: string | URL | Request, init?: RequestInit): Promise<Response> {
   const headers = new Headers(init?.headers);
-  if (auth.currentUser) {
-    try {
-      const token = await auth.currentUser.getIdToken();
-      headers.set('Authorization', `Bearer ${token}`);
-    } catch (e) {
-      console.warn('Failed to get Firebase token for authFetch', e);
-    }
+  const token = await getFirebaseToken();
+  if (token) {
+    headers.set('Authorization', `Bearer ${token}`);
+  } else {
+    console.warn('authFetch: Firebase user is null, sending request without Authorization header');
   }
   return fetch(input, { ...init, headers });
 }

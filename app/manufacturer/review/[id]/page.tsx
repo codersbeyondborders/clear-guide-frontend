@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import {
   Loader2, ClipboardCheck, CheckCircle2, XCircle, ChevronLeft,
-  Globe, Upload, LayoutList, FileText, AlertTriangle,
+  Globe, Upload, LayoutList, FileText, AlertTriangle, Video
 } from 'lucide-react'
 import { DashboardShell } from '@/components/dashboard/DashboardShell'
 import { useAuth } from '@/hooks/useAuth'
@@ -32,6 +32,7 @@ interface ManualDetail {
   sections: ManualSection[]
   createdAt: string
   updatedAt: string
+  videoGenerationStatus?: string // 'none' | 'pending' | 'completed' | 'error'
 }
 
 // ---------------------------------------------------------------------------
@@ -97,6 +98,8 @@ export default function ReviewPage() {
   const [actionLoading, setActionLoading] = useState(false)
   const [actionError, setActionError] = useState('')
   const [actionDone, setActionDone] = useState<'approved' | 'rejected' | null>(null)
+  
+  const [generatingVideo, setGeneratingVideo] = useState(false)
 
   const MAX_NOTES = 1000
 
@@ -110,13 +113,35 @@ export default function ReviewPage() {
 
   useEffect(() => {
     if (!id) return
-    fetch(`/api/manuals/${id}`)
-      .then(async (res) => {
-        if (!res.ok) throw new Error((await res.json().catch(() => ({}))).error ?? 'Failed to load manual')
-        return res.json()
-      })
-      .then((data) => { setManual(data); setLoading(false) })
-      .catch((err) => { setLoadError(err.message); setLoading(false) })
+
+    let pollInterval: NodeJS.Timeout
+
+    const fetchManual = () => {
+      fetch(`/api/manuals/${id}`)
+        .then(async (res) => {
+          if (!res.ok) throw new Error((await res.json().catch(() => ({}))).error ?? 'Failed to load manual')
+          return res.json()
+        })
+        .then((data) => { 
+          setManual(data)
+          setLoading(false)
+          
+          if (data.status === 'pending' || data.videoGenerationStatus === 'pending') {
+            // Poll every 3 seconds if still pending
+            pollInterval = setTimeout(fetchManual, 3000)
+          }
+        })
+        .catch((err) => { 
+          setLoadError(err.message)
+          setLoading(false) 
+        })
+    }
+
+    fetchManual()
+
+    return () => {
+      if (pollInterval) clearTimeout(pollInterval)
+    }
   }, [id])
 
   async function patchStatus(newStatus: 'published' | 'draft', notes?: string) {
@@ -138,6 +163,29 @@ export default function ReviewPage() {
       setActionError(err instanceof Error ? err.message : 'Something went wrong.')
     } finally {
       setActionLoading(false)
+    }
+  }
+
+  async function generateVideo() {
+    setGeneratingVideo(true)
+    try {
+      const res = await fetch(`/api/manuals/generate-video`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          manualId: manual?.id,
+          procedureTitle: manual?.productName,
+          repairSteps: manual?.sections.map(s => s.title)
+        }),
+      })
+      if (!res.ok) throw new Error('Failed to request video generation')
+      
+      // Update local state to trigger polling
+      setManual(m => m ? { ...m, videoGenerationStatus: 'pending' } : null)
+    } catch (err) {
+      console.error(err)
+    } finally {
+      setGeneratingVideo(false)
     }
   }
 
@@ -296,13 +344,30 @@ export default function ReviewPage() {
 
           {manual.sections.length === 0 && (
             <div
-              className="flex flex-col items-center justify-center py-14 rounded-2xl border gap-3 text-center"
+              className="flex flex-col items-center justify-center py-14 rounded-2xl border gap-4 text-center"
               style={{ backgroundColor: 'var(--color-card)', borderColor: 'var(--color-border)' }}
             >
-              <FileText className="w-10 h-10 opacity-30" style={{ color: 'var(--color-primary)' }} aria-hidden="true" />
-              <p className="text-sm" style={{ color: 'var(--color-muted-foreground)' }}>
-                No sections to preview for this manual.
-              </p>
+              {manual.status === 'pending' ? (
+                <>
+                  <div className="relative">
+                    <div className="absolute inset-0 bg-blue-100 blur-2xl rounded-full opacity-50 scale-150"></div>
+                    <Loader2 className="w-12 h-12 animate-spin relative z-10" style={{ color: 'var(--color-primary)' }} aria-hidden="true" />
+                  </div>
+                  <div className="space-y-1">
+                    <h3 className="font-semibold text-lg" style={{ color: 'var(--color-foreground)' }}>AI is parsing your manual...</h3>
+                    <p className="text-sm" style={{ color: 'var(--color-muted-foreground)' }}>
+                      This usually takes a few seconds. We're extracting text, sections, and images.
+                    </p>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <FileText className="w-10 h-10 opacity-30" style={{ color: 'var(--color-primary)' }} aria-hidden="true" />
+                  <p className="text-sm" style={{ color: 'var(--color-muted-foreground)' }}>
+                    No sections to preview for this manual.
+                  </p>
+                </>
+              )}
             </div>
           )}
         </div>
@@ -443,6 +508,50 @@ export default function ReviewPage() {
                 <span className="font-medium" style={{ color: 'var(--color-foreground)' }}>{value}</span>
               </div>
             ))}
+          </div>
+
+          {/* AI Video Walkthrough */}
+          <div
+            className="rounded-xl border p-4 space-y-4"
+            style={{ backgroundColor: 'var(--color-card)', borderColor: 'var(--color-border)' }}
+          >
+            <div className="space-y-1">
+              <h2 className="text-sm font-bold" style={{ color: 'var(--color-foreground)' }}>AI Video Walkthrough</h2>
+              <p className="text-xs leading-relaxed" style={{ color: 'var(--color-muted-foreground)' }}>
+                Generate step-by-step interactive animations with voiceovers for this manual.
+              </p>
+            </div>
+            
+            {manual.videoGenerationStatus === 'completed' && (
+              <div className="flex items-center gap-2 text-sm font-medium" style={{ color: 'var(--color-primary)' }}>
+                <CheckCircle2 className="w-4 h-4" />
+                Video generated successfully
+              </div>
+            )}
+            
+            {manual.videoGenerationStatus === 'pending' && (
+              <div className="flex items-center gap-2 text-sm font-medium" style={{ color: 'var(--color-primary)' }}>
+                <Loader2 className="w-4 h-4 animate-spin" />
+                AI is generating video...
+              </div>
+            )}
+            
+            {(!manual.videoGenerationStatus || manual.videoGenerationStatus === 'none' || manual.videoGenerationStatus === 'error') && (
+              <button
+                type="button"
+                onClick={generateVideo}
+                disabled={generatingVideo || manual.status === 'pending'}
+                className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl text-sm font-semibold border transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-60"
+                style={{ backgroundColor: 'var(--color-background-subtle)', color: 'var(--color-foreground)', borderColor: 'var(--color-border)' }}
+              >
+                {generatingVideo ? <Loader2 className="w-4 h-4 animate-spin" /> : <Video className="w-4 h-4" />}
+                Generate Video
+              </button>
+            )}
+            
+            {manual.videoGenerationStatus === 'error' && (
+              <p className="text-xs" style={{ color: 'var(--color-destructive)' }}>Video generation failed. Please try again.</p>
+            )}
           </div>
         </aside>
       </div>

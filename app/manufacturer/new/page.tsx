@@ -10,6 +10,7 @@ import { AIProcessingOverlay } from '@/components/AIProcessingOverlay'
 import { ManualDoneCard } from '@/components/ManualDoneCard'
 import { ManualReviewCard } from '@/components/ManualReviewCard'
 import { FileUpload } from '@/components/SectionBuilder'
+import { authFetch } from '@/lib/apiClient'
 
 // ---------------------------------------------------------------------------
 // ClearGuide logo
@@ -271,7 +272,7 @@ function ManualEditor() {
             }))
           : [],
       }
-      const res = await fetch('/api/manuals', {
+      const res = await authFetch('/api/manuals', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
@@ -318,8 +319,8 @@ function ManualEditor() {
           onRequestChanges={() => { setReviewing(false) }}
           onApproveAndPublish={async () => {
             if (savedManualId) {
-              await fetch(`/api/manuals/${savedManualId}`, {
-                method: 'PATCH',
+              await authFetch(`/api/manuals/${savedManualId}`, {
+                method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ status: 'published' }),
               }).catch(() => null)

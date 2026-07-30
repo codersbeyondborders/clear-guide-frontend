@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import { MessageCircle, CheckCircle2, Pin } from 'lucide-react'
 import type { ForumThread } from '@/lib/types'
 
@@ -38,13 +39,12 @@ export function ThreadCard({ thread, manualId, showManualTag = false }: ThreadCa
       >
         {/* Avatar */}
         <div
-          className="w-8 h-8 rounded-full shrink-0 flex items-center justify-center text-xs font-bold text-white mt-0.5"
+          className="relative w-8 h-8 rounded-full shrink-0 flex items-center justify-center text-xs font-bold text-white mt-0.5 overflow-hidden"
           style={{ backgroundColor: 'var(--color-primary)' }}
           aria-hidden="true"
         >
           {thread.author?.image ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={thread.author.image} alt="" className="w-full h-full rounded-full object-cover" />
+            <Image src={thread.author.image} alt="" fill className="object-cover" />
           ) : (
             initials
           )}

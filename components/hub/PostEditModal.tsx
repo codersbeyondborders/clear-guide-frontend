@@ -41,6 +41,16 @@ export function PostEditModal({ post, isOpen, onClose, onUpdated }: PostEditModa
     }
   }, [isOpen, post])
 
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose()
+    }
+    if (isOpen) {
+      document.addEventListener('keydown', handleKeyDown)
+    }
+    return () => document.removeEventListener('keydown', handleKeyDown)
+  }, [isOpen, onClose])
+
   if (!isOpen) return null
 
   async function handleSubmit(e: React.FormEvent) {

@@ -4,10 +4,11 @@ import { useState } from 'react'
 import { useParams } from 'next/navigation'
 import useSWR from 'swr'
 import dynamic from 'next/dynamic'
-import { Loader2, AlertCircle, Volume2, ChevronLeft, ChevronRight } from 'lucide-react'
+import { Loader2, AlertCircle, Volume2, ChevronLeft, ChevronRight, Play, Pause } from 'lucide-react'
 import { AccessibilityProvider, useAccessibility } from '@/context/AccessibilityContext'
 import { ViewerHeader } from '@/components/ViewerHeader'
 import { ViewerTabBar } from '@/components/ViewerTabBar'
+import { useRef, useEffect } from 'react'
 
 // ---------------------------------------------------------------------------
 // Lazy VideoPlayer (SSR off)
@@ -51,6 +52,19 @@ interface Manual {
   description: string | null
   languages: string[]
   sections: Section[]
+  videoGenerationStatus?: string
+  videoData?: {
+    frames: {
+      step: number
+      title: string
+      description: string
+      narration: string
+      toolRequired: string
+      svgFrame: string
+      audioUrl: string
+      durationSeconds: number
+    }[]
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -61,6 +75,56 @@ const fetcher = (url: string) =>
     if (!r.ok) throw new Error(`${r.status}`)
     return r.json() as Promise<Manual>
   })
+
+// ---------------------------------------------------------------------------
+// AI Video Frame Component
+// ---------------------------------------------------------------------------
+function AIVideoFrame({ frame }: { frame: any }) {
+  const [isPlaying, setIsPlaying] = useState(false)
+  const audioRef = useRef<HTMLAudioElement>(null)
+
+  const toggle = () => {
+    if (audioRef.current) {
+      if (isPlaying) audioRef.current.pause()
+      else audioRef.current.play()
+    }
+  }
+
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.pause()
+      audioRef.current.currentTime = 0
+      setIsPlaying(false)
+    }
+  }, [frame])
+
+  return (
+    <div className="relative rounded-2xl overflow-hidden border bg-black flex flex-col group aspect-video">
+      {/* The interactive SVG frame */}
+      <div 
+        className="w-full h-full flex items-center justify-center pointer-events-none"
+        dangerouslySetInnerHTML={{ __html: frame.svgFrame }} 
+      />
+      <audio 
+        ref={audioRef} 
+        src={frame.audioUrl} 
+        onEnded={() => setIsPlaying(false)} 
+        onPlay={() => setIsPlaying(true)} 
+        onPause={() => setIsPlaying(false)} 
+      />
+      
+      {/* Controls */}
+      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-4 bg-black/80 px-6 py-3 rounded-full backdrop-blur-md border border-white/10 opacity-0 group-hover:opacity-100 transition-opacity">
+        <button onClick={toggle} className="text-white hover:text-emerald-400 transition-colors flex items-center justify-center w-8 h-8 rounded-full border border-white/20">
+          {isPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4 ml-0.5" />}
+        </button>
+        <div className="text-white text-sm font-medium whitespace-nowrap">
+          {frame.toolRequired ? `Tool: ${frame.toolRequired}` : 'No tool required'}
+        </div>
+      </div>
+    </div>
+  )
+}
 
 // ---------------------------------------------------------------------------
 // Inner content
@@ -176,8 +240,20 @@ function VideoModeContent({ manual }: { manual: Manual }) {
               </div>
             </div>
 
-            {/* Video player */}
-            <VideoPlayer src={section.videoUrls[0]} title={section.title} />
+            {/* Video player / AI Frame */}
+            {manual.videoGenerationStatus === 'pending' ? (
+              <div className="w-full aspect-video flex flex-col items-center justify-center p-12 border rounded-2xl bg-card text-center gap-4">
+                <Loader2 className="w-10 h-10 animate-spin text-primary" />
+                <div>
+                  <h3 className="font-semibold">AI is animating this procedure</h3>
+                  <p className="text-sm text-muted-foreground mt-1">This will only take a moment.</p>
+                </div>
+              </div>
+            ) : manual.videoData?.frames && manual.videoData.frames[activeIndex] ? (
+              <AIVideoFrame frame={manual.videoData.frames[activeIndex]} />
+            ) : (
+              <VideoPlayer src={section.videoUrls?.[0]} title={section.title} />
+            )}
 
             {/* Audio description / caption */}
             {section.content && (
@@ -341,7 +417,10 @@ export default function VideoModePage() {
   const { data: manual, error, isLoading } = useSWR<Manual>(
     manualId ? `/api/public/manuals/${manualId}` : null,
     fetcher,
-    { revalidateOnFocus: false },
+    { 
+      revalidateOnFocus: false,
+      refreshInterval: (data) => data?.videoGenerationStatus === 'pending' ? 3000 : 0
+    },
   )
 
   if (isLoading) {

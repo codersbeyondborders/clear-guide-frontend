@@ -2,8 +2,9 @@
 
 import { usePathname } from 'next/navigation'
 import Link from 'next/link'
-import { LayoutDashboard, BarChart2, Settings, LogOut, X, Users } from 'lucide-react'
+import { LayoutDashboard, BarChart2, Settings, LogOut, X, Users, Bell } from 'lucide-react'
 import { ThemeToggle } from '@/components/ThemeToggle'
+import { useEffect, useState } from 'react'
 
 // ---------------------------------------------------------------------------
 // Logo
@@ -71,6 +72,24 @@ function SidebarContent({
   isMobile?: boolean
 }) {
   const pathname = usePathname()
+  const [pendingCount, setPendingCount] = useState(0)
+
+  useEffect(() => {
+    // Poll for pending manuals to show notification
+    const fetchPending = async () => {
+      try {
+        const res = await fetch('/api/manuals')
+        if (res.ok) {
+          const manuals = await res.json()
+          const count = manuals.filter((m: any) => m.status === 'pending').length
+          setPendingCount(count)
+        }
+      } catch (err) {}
+    }
+    fetchPending()
+    const interval = setInterval(fetchPending, 10000)
+    return () => clearInterval(interval)
+  }, [])
 
   return (
     <div
@@ -144,7 +163,15 @@ function SidebarContent({
           <span className="text-xs font-medium" style={{ color: 'var(--color-muted-foreground)' }}>
             Theme
           </span>
-          <ThemeToggle />
+          <div className="flex items-center gap-4">
+            <button className="relative p-1 text-slate-400 hover:text-slate-600 transition-colors">
+              <Bell className="w-4 h-4" />
+              {pendingCount > 0 && (
+                <span className="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
+              )}
+            </button>
+            <ThemeToggle />
+          </div>
         </div>
         {/* Logout */}
         <button

@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { formatDistanceToNow } from 'date-fns'
 import { Loader2, Send, AlertCircle } from 'lucide-react'
 import type { HubComment } from '@/lib/types'
@@ -64,11 +65,10 @@ function CommentItem({
       <div className="flex gap-3 py-3">
         <Link href={profileHref} aria-label={comment.author.name}
           className="shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-full">
-          <div className="w-8 h-8 rounded-full overflow-hidden flex items-center justify-center text-xs font-bold select-none"
+          <div className="relative w-8 h-8 rounded-full overflow-hidden flex items-center justify-center text-xs font-bold select-none"
             style={{ background: 'var(--color-primary)', color: '#04140e' }}>
             {comment.author.avatarUrl
-              // eslint-disable-next-line @next/next/no-img-element
-              ? <img src={comment.author.avatarUrl} alt="" className="w-full h-full object-cover" />
+              ? <Image src={comment.author.avatarUrl} alt="" fill className="object-cover" />
               : (comment.author.name[0] ?? 'U').toUpperCase()
             }
           </div>
@@ -111,11 +111,10 @@ function CommentItem({
 
           {showReplyBox && currentUser && (
             <form onSubmit={submitReply} className="mt-2 flex gap-2" aria-label="Write a reply">
-              <div className="w-7 h-7 rounded-full overflow-hidden flex items-center justify-center text-xs font-bold select-none shrink-0"
+              <div className="relative w-7 h-7 rounded-full overflow-hidden flex items-center justify-center text-xs font-bold select-none shrink-0"
                 style={{ background: 'var(--color-primary)', color: '#04140e' }}>
                 {currentUser.avatarUrl
-                  // eslint-disable-next-line @next/next/no-img-element
-                  ? <img src={currentUser.avatarUrl} alt="" className="w-full h-full object-cover" />
+                  ? <Image src={currentUser.avatarUrl} alt="" fill className="object-cover" />
                   : (currentUser.name[0] ?? 'U').toUpperCase()
                 }
               </div>
@@ -186,11 +185,10 @@ export function CommentThread({ postId, currentUser, isAuthenticated }: CommentT
       {/* Compose */}
       {currentUser && (
         <form onSubmit={submitComment} className="flex gap-3 mb-4" aria-label="Write a comment">
-          <div className="w-9 h-9 rounded-full overflow-hidden flex items-center justify-center text-sm font-bold select-none shrink-0"
+          <div className="relative w-9 h-9 rounded-full overflow-hidden flex items-center justify-center text-sm font-bold select-none shrink-0"
             style={{ background: 'var(--color-primary)', color: '#04140e' }}>
             {currentUser.avatarUrl
-              // eslint-disable-next-line @next/next/no-img-element
-              ? <img src={currentUser.avatarUrl} alt="" className="w-full h-full object-cover" />
+              ? <Image src={currentUser.avatarUrl} alt="" fill className="object-cover" />
               : (currentUser.name[0] ?? 'U').toUpperCase()
             }
           </div>

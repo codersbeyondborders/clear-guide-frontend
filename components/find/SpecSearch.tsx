@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import Image from 'next/image'
 import { Search, Loader2, AlertCircle, ChevronRight, SlidersHorizontal } from 'lucide-react'
 import { authFetch } from "@/lib/apiClient"
 
@@ -188,8 +189,9 @@ export function SpecSearch() {
                   aria-label={`View manual for ${r.productName}${r.productModel ? ` — ${r.productModel}` : ''}`}
                 >
                   {r.coverImage ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img src={r.coverImage} alt="" aria-hidden="true" className="w-10 h-10 rounded-lg object-cover shrink-0" />
+                    <div className="relative w-10 h-10 rounded-lg shrink-0 overflow-hidden">
+                      <Image src={r.coverImage} alt="" fill className="object-cover" />
+                    </div>
                   ) : (
                     <div className="w-10 h-10 rounded-lg shrink-0 flex items-center justify-center" style={{ backgroundColor: 'var(--color-primary-subtle)' }} aria-hidden="true">
                       <span className="text-lg font-black" style={{ color: 'var(--color-primary)' }}>

@@ -1,6 +1,7 @@
 'use client'
 
 import { useRef, useState } from 'react'
+import Image from 'next/image'
 import { ImageIcon, Video, FileText, X, Loader2, AlertCircle } from 'lucide-react'
 import type { MediaAttachment } from '@/lib/types'
 import { authFetch } from "@/lib/apiClient"
@@ -18,8 +19,7 @@ function MediaPreview({ item, onRemove }: { item: MediaAttachment; onRemove: () 
   if (item.type === 'image') {
     return (
       <div className="relative group rounded-xl overflow-hidden" style={{ width: 96, height: 96, background: 'var(--color-background-subtle)', flexShrink: 0 }}>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={item.url} alt={item.name ?? 'attachment'} className="w-full h-full object-cover" />
+        <Image src={item.url} alt={item.name ?? 'attachment'} fill className="object-cover" />
         <button
           type="button"
           onClick={onRemove}

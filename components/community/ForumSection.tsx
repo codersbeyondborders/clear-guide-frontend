@@ -11,50 +11,6 @@ import type { User } from 'firebase/auth'
 import { authFetch } from "@/lib/apiClient"
 
 // ---------------------------------------------------------------------------
-// Mock data — mirrors a real DB payload
-// ---------------------------------------------------------------------------
-const MOCK_THREADS: ForumThread[] = [
-  {
-    id: 'mock-t1',
-    manualId: '',
-    userId: 'u1',
-    title: 'Section 4 — step 7 references the wrong diagram',
-    body: 'The diagram referenced as "Fig. 4-7" appears to actually be Fig. 4-8. Has anyone else confirmed this? Took me 20 minutes to figure out.',
-    isPinned: false,
-    isSolved: true,
-    replyCount: 6,
-    createdAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 2).toISOString(),
-    updatedAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 1).toISOString(),
-    author: { name: 'Marcus L.', image: null },
-  },
-  {
-    id: 'mock-t2',
-    manualId: '',
-    userId: 'u2',
-    title: 'Calibration mode not working after firmware update',
-    body: 'After updating to firmware 2.3, the calibration procedure described in Section 6 no longer works. The button sequence seems to have changed.',
-    isPinned: true,
-    isSolved: false,
-    replyCount: 12,
-    createdAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 5).toISOString(),
-    updatedAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 4).toISOString(),
-    author: { name: 'Aiko T.', image: null },
-  },
-  {
-    id: 'mock-t3',
-    manualId: '',
-    userId: 'u3',
-    title: 'Anyone have a checklist for the maintenance schedule?',
-    body: 'The manual mentions quarterly maintenance but doesn\'t provide a clear checklist format. Happy to share what I\'ve put together if anyone wants it.',
-    isPinned: false,
-    isSolved: false,
-    replyCount: 3,
-    createdAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 9).toISOString(),
-    updatedAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 9).toISOString(),
-    author: { name: 'Elena R.', image: null },
-  },
-]
-
 // ---------------------------------------------------------------------------
 // New Thread Form
 // ---------------------------------------------------------------------------
@@ -213,7 +169,6 @@ const fetcher = (url: string) => authFetch(url).then(r => r.json())
 export function ForumSection({ manualId, user, currentPath }: ForumSectionProps) {
   const swrKey = `/api/community/threads?manualId=${manualId}`
   const { data, error, isLoading } = useSWR<{ data: ForumThread[] }>(swrKey, fetcher, {
-    fallbackData: { data: MOCK_THREADS.map(t => ({ ...t, manualId })) },
     revalidateOnFocus: false,
   })
 

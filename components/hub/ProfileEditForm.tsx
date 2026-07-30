@@ -1,6 +1,7 @@
 'use client'
 
 import { useRef, useState } from 'react'
+import Image from 'next/image'
 import { Camera, Loader2, Check, AlertCircle, Plus, X } from 'lucide-react'
 import type { HubProfile } from '@/lib/types'
 import { authFetch } from "@/lib/apiClient"
@@ -101,11 +102,10 @@ export function ProfileEditForm({ profile, onSaved }: ProfileEditFormProps) {
       {/* Avatar */}
       <div className="flex items-center gap-4">
         <div className="relative">
-          <div className="w-16 h-16 rounded-full overflow-hidden flex items-center justify-center text-xl font-bold select-none"
+          <div className="relative w-16 h-16 rounded-full overflow-hidden flex items-center justify-center text-xl font-bold select-none"
             style={{ background: 'var(--color-primary)', color: '#04140e' }}>
             {avatarPreview
-              // eslint-disable-next-line @next/next/no-img-element
-              ? <img src={avatarPreview} alt="Your avatar" className="w-full h-full object-cover" />
+              ? <Image src={avatarPreview} alt="Your avatar" fill className="object-cover" />
               : (displayName || profile.name || 'U')[0]?.toUpperCase()
             }
           </div>

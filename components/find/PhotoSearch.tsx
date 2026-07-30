@@ -6,6 +6,7 @@ import {
   Camera, Upload, Loader2, AlertCircle, X, CheckCircle2,
   MessageCircle, Star, ChevronRight, ExternalLink, Lightbulb, ScanSearch, Info,
 } from 'lucide-react'
+import Image from 'next/image'
 import { authFetch } from "@/lib/apiClient"
 
 
@@ -151,9 +152,8 @@ export function PhotoSearch() {
 
       {/* Preview / dropzone */}
       {preview ? (
-        <div className="relative w-full max-w-xs mx-auto">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={preview} alt="Selected device" className="w-full rounded-2xl border object-cover" style={{ borderColor: 'var(--color-border)' }} />
+        <div className="relative w-full max-w-xs mx-auto aspect-[3/4] rounded-2xl overflow-hidden border" style={{ borderColor: 'var(--color-border)' }}>
+          <Image src={preview} alt="Selected device" fill className="object-cover" />
           {!busy && (
             <button
               onClick={reset}
@@ -243,8 +243,9 @@ export function PhotoSearch() {
                       aria-label={`Open manual for ${m.productName}`}
                     >
                       {m.coverImage ? (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img src={m.coverImage} alt="" aria-hidden="true" className="w-10 h-10 rounded-lg object-cover shrink-0" />
+                        <div className="relative w-10 h-10 rounded-lg shrink-0 overflow-hidden">
+                          <Image src={m.coverImage} alt="" fill className="object-cover" />
+                        </div>
                       ) : (
                         <div className="w-10 h-10 rounded-lg shrink-0 flex items-center justify-center" style={{ backgroundColor: 'var(--color-primary-subtle)' }} aria-hidden="true">
                           <span className="text-lg font-black" style={{ color: 'var(--color-primary)' }}>{m.productName.charAt(0).toUpperCase()}</span>

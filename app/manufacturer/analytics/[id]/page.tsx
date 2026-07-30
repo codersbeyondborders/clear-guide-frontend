@@ -7,44 +7,8 @@ import dynamic from 'next/dynamic'
 import { KPICard } from '@/components/KPICard'
 
 // ---------------------------------------------------------------------------
-// Enriched analytics mock data
+// Formatting Utils
 // ---------------------------------------------------------------------------
-const MOCK_DETAILED = {
-  topCountries: [
-    { country: 'United States', flag: '🇺🇸', views: 4820, percentage: 38 },
-    { country: 'United Kingdom', flag: '🇬🇧', views: 2140, percentage: 17 },
-    { country: 'Germany', flag: '🇩🇪', views: 1560, percentage: 12 },
-    { country: 'India', flag: '🇮🇳', views: 1320, percentage: 10 },
-    { country: 'Canada', flag: '🇨🇦', views: 890, percentage: 7 },
-  ],
-  deviceStats: { mobile: 58, desktop: 34, tablet: 8 },
-  topLanguages: [
-    { language: 'English', views: 6200, percentage: 49 },
-    { language: 'German', views: 2100, percentage: 17 },
-    { language: 'Spanish', views: 1700, percentage: 13 },
-    { language: 'French', views: 1200, percentage: 10 },
-    { language: 'Hindi', views: 800, percentage: 6 },
-  ],
-  sectionEngagement: [
-    { sectionNumber: 1, title: 'Getting Started', views: 5820, avgTimeSeconds: 142, dropoffRate: 8 },
-    { sectionNumber: 2, title: 'Safety Warnings', views: 4210, avgTimeSeconds: 89, dropoffRate: 18 },
-    { sectionNumber: 3, title: 'Installation Guide', views: 3480, avgTimeSeconds: 312, dropoffRate: 22 },
-    { sectionNumber: 4, title: 'Operating Instructions', views: 2760, avgTimeSeconds: 270, dropoffRate: 35 },
-    { sectionNumber: 5, title: 'Troubleshooting', views: 2120, avgTimeSeconds: 198, dropoffRate: 48 },
-    { sectionNumber: 6, title: 'Maintenance', views: 1340, avgTimeSeconds: 110, dropoffRate: 63 },
-    { sectionNumber: 7, title: 'Warranty & Support', views: 880, avgTimeSeconds: 60, dropoffRate: 72 },
-  ],
-  engagementFunnel: {
-    sessions: 12640,
-    scrolled50: 8920,
-    usedAiChat: 3180,
-    downloaded: 1460,
-  },
-  bounceRate: 24,
-  returningUserRate: 31,
-  viewsByMode: { web: 7200, ar: 1840, qr: 2200, direct: 1400 },
-}
-
 function formatSecondsShort(s: number): string {
   if (s < 60) return `${s}s`
   const m = Math.floor(s / 60)
@@ -61,21 +25,22 @@ interface UserBehaviourProps {
 }
 
 function UserBehaviourSection({ returningVsNew, totalViews = 0, activeUsers = 0 }: UserBehaviourProps) {
-  const { engagementFunnel, bounceRate, returningUserRate, viewsByMode } = MOCK_DETAILED
-
-  // Override returning/new from live data when available
-  const returning = returningVsNew?.returning ?? Math.round(totalViews * (returningUserRate / 100))
-  const newUsers  = returningVsNew?.new      ?? (activeUsers - returning)
+  const returning = returningVsNew?.returning ?? 0
+  const newUsers  = returningVsNew?.new ?? (activeUsers - returning)
   const totalKnown = returning + newUsers
 
   const funnelSteps = [
-    { label: 'Sessions', value: totalViews || engagementFunnel.sessions, icon: Eye },
+    { label: 'Sessions', value: totalViews, icon: Eye },
     { label: 'Returning Users', value: returning, icon: UserCheck },
-    { label: 'Used AI Chat', value: engagementFunnel.usedAiChat, icon: MessageSquare },
-    { label: 'Downloaded', value: engagementFunnel.downloaded, icon: Download },
+    { label: 'Used AI Chat', value: 0, icon: MessageSquare }, // Live tracking not implemented yet
+    { label: 'Downloaded', value: 0, icon: Download },
   ]
 
-  const mapTotalViews = Object.values(viewsByMode).reduce((a, b) => a + b, 0)
+  const bounceRate = 0 // Requires detailed session tracking
+  const returningUserRate = totalKnown > 0 ? Math.round((returning / totalKnown) * 100) : 0
+
+  const viewsByMode = { web: totalViews, ar: 0, qr: 0, direct: 0 }
+  const mapTotalViews = totalViews || 1
   const modeLabels: Record<string, string> = { web: 'Web Viewer', ar: 'AR Overlay', qr: 'QR Scan', direct: 'Direct Link' }
 
   return (
@@ -92,7 +57,7 @@ function UserBehaviourSection({ returningVsNew, totalViews = 0, activeUsers = 0 
           <p className="text-sm font-semibold" style={{ color: 'var(--color-foreground)' }}>Engagement Funnel</p>
           <div className="space-y-3">
             {funnelSteps.map((step, i) => {
-              const pct = Math.round((step.value / funnelSteps[0].value) * 100)
+              const pct = funnelSteps[0].value > 0 ? Math.round((step.value / funnelSteps[0].value) * 100) : 0
               const Icon = step.icon
               return (
                 <div key={step.label} className="space-y-1">
@@ -130,7 +95,7 @@ function UserBehaviourSection({ returningVsNew, totalViews = 0, activeUsers = 0 
             <div>
               <p className="text-xs" style={{ color: 'var(--color-muted-foreground)' }}>Returning</p>
               <p className="text-lg font-bold" style={{ color: 'var(--color-foreground)' }}>
-                {totalKnown > 0 ? `${Math.round((returning / totalKnown) * 100)}%` : `${returningUserRate}%`}
+                {returningUserRate}%
               </p>
             </div>
           </div>
@@ -169,13 +134,14 @@ function UserBehaviourSection({ returningVsNew, totalViews = 0, activeUsers = 0 
 // ---------------------------------------------------------------------------
 interface DemographicsProps {
   countryData?: { country: string; views: number }[]
+  deviceStats?: { mobile: number; desktop: number; tablet: number }
+  topLanguages?: { language: string; views: number; percentage: number }[]
 }
 
-function DemographicsSection({ countryData }: DemographicsProps) {
-  const { topCountries, deviceStats, topLanguages } = MOCK_DETAILED
-  const deviceTotal = deviceStats.mobile + deviceStats.desktop + deviceStats.tablet
+function DemographicsSection({ countryData, deviceStats, topLanguages }: DemographicsProps) {
+  const dStats = deviceStats || { mobile: 0, desktop: 0, tablet: 0 }
+  const deviceTotal = (dStats.mobile + dStats.desktop + dStats.tablet) || 1
 
-  // Use live country data when available, fall back to mock
   const countries = (countryData && countryData.length > 0)
     ? countryData.map((c, i) => ({
         country: c.country,
@@ -183,7 +149,9 @@ function DemographicsSection({ countryData }: DemographicsProps) {
         views: c.views,
         percentage: i === 0 ? 100 : Math.round((c.views / countryData[0].views) * 100),
       }))
-    : topCountries
+    : []
+
+  const languages = topLanguages || []
 
   return (
     <section aria-labelledby="demographics-heading" className="space-y-4">
@@ -198,7 +166,7 @@ function DemographicsSection({ countryData }: DemographicsProps) {
         >
           <p className="text-sm font-semibold" style={{ color: 'var(--color-foreground)' }}>Top Countries</p>
           <div className="space-y-2.5" role="list" aria-label="Top countries by views">
-            {countries.map((c) => (
+            {countries.length > 0 ? countries.map((c) => (
               <div key={c.country} role="listitem" className="space-y-1">
                 <div className="flex items-center justify-between text-xs">
                   <span className="flex items-center gap-1.5" style={{ color: 'var(--color-foreground)' }}>
@@ -211,7 +179,7 @@ function DemographicsSection({ countryData }: DemographicsProps) {
                   <div className="h-full rounded-full" style={{ width: `${c.percentage}%`, backgroundColor: 'var(--color-primary)' }} />
                 </div>
               </div>
-            ))}
+            )) : <p className="text-xs" style={{ color: 'var(--color-muted-foreground)' }}>No country data yet.</p>}
           </div>
         </div>
 
@@ -223,9 +191,9 @@ function DemographicsSection({ countryData }: DemographicsProps) {
           <p className="text-sm font-semibold" style={{ color: 'var(--color-foreground)' }}>Devices</p>
           <div className="space-y-3">
             {([
-              { label: 'Mobile',  pct: deviceStats.mobile,  icon: Smartphone, color: 'var(--color-primary)' },
-              { label: 'Desktop', pct: deviceStats.desktop, icon: Monitor,    color: '#0284c7' },
-              { label: 'Tablet',  pct: deviceStats.tablet,  icon: Tablet,     color: '#d97706' },
+              { label: 'Mobile',  pct: dStats.mobile,  icon: Smartphone, color: 'var(--color-primary)' },
+              { label: 'Desktop', pct: dStats.desktop, icon: Monitor,    color: '#0284c7' },
+              { label: 'Tablet',  pct: dStats.tablet,  icon: Tablet,     color: '#d97706' },
             ] as { label: string; pct: number; icon: typeof Smartphone; color: string }[]).map(({ label, pct, icon: Icon, color }) => (
               <div key={label} className="flex items-center gap-3">
                 <div
@@ -248,7 +216,7 @@ function DemographicsSection({ countryData }: DemographicsProps) {
             ))}
           </div>
           <p className="text-xs" style={{ color: 'var(--color-muted-foreground)' }}>
-            {deviceTotal.toLocaleString()} total sessions
+            100% of recorded sessions
           </p>
         </div>
 
@@ -259,7 +227,7 @@ function DemographicsSection({ countryData }: DemographicsProps) {
         >
           <p className="text-sm font-semibold" style={{ color: 'var(--color-foreground)' }}>Languages</p>
           <div className="space-y-2.5" role="list" aria-label="Top languages by views">
-            {topLanguages.map((l) => (
+            {languages.length > 0 ? languages.map((l) => (
               <div key={l.language} role="listitem" className="space-y-1">
                 <div className="flex items-center justify-between text-xs">
                   <span className="flex items-center gap-1.5">
@@ -272,7 +240,7 @@ function DemographicsSection({ countryData }: DemographicsProps) {
                   <div className="h-full rounded-full" style={{ width: `${l.percentage}%`, backgroundColor: 'var(--color-primary)' }} />
                 </div>
               </div>
-            ))}
+            )) : <p className="text-xs" style={{ color: 'var(--color-muted-foreground)' }}>No language data yet.</p>}
           </div>
         </div>
       </div>
@@ -288,9 +256,6 @@ interface SectionEngagementProps {
 }
 
 function SectionEngagementSection({ sectionData }: SectionEngagementProps) {
-  const { sectionEngagement: mockSections } = MOCK_DETAILED
-
-  // Build unified shape from live data or mock
   const sectionEngagement = (sectionData && sectionData.length > 0)
     ? sectionData.map((s, i) => ({
         sectionNumber: i + 1,
@@ -299,7 +264,7 @@ function SectionEngagementSection({ sectionData }: SectionEngagementProps) {
         avgTimeSeconds: 0,
         dropoffRate: Math.max(0, 100 - s.avgScrollDepth),
       }))
-    : mockSections
+    : []
 
   function dropoffColor(rate: number): string {
     if (rate < 20) return '#16a34a'
@@ -359,6 +324,13 @@ function SectionEngagementSection({ sectionData }: SectionEngagementProps) {
               </tr>
             </thead>
             <tbody>
+              {sectionEngagement.length === 0 && (
+                <tr>
+                  <td colSpan={5} className="px-6 py-6 text-center text-xs" style={{ color: 'var(--color-muted-foreground)' }}>
+                    No section engagement data yet.
+                  </td>
+                </tr>
+              )}
               {sectionEngagement.map((s, i) => (
                 <tr
                   key={s.sectionNumber}
@@ -452,6 +424,8 @@ interface AnalyticsData {
   eventBreakdown: { type: string; count: number }[]
   topSections: { title: string; views: number; avgScrollDepth: number }[]
   returningVsNew: { returning: number; new: number }
+  deviceStats?: { mobile: number; desktop: number; tablet: number }
+  topLanguages?: { language: string; views: number; percentage: number }[]
 }
 
 function ChartSkeleton({ height = 220 }: { height?: number }) {
@@ -839,7 +813,11 @@ export default function AnalyticsPage({ params }: { params: Promise<{ id: string
         </section>
 
         {/* ── Demographics (countries + languages) ─────────────────── */}
-        <DemographicsSection countryData={data?.countryBreakdown} />
+        <DemographicsSection 
+          countryData={data?.countryBreakdown} 
+          deviceStats={data?.deviceStats} 
+          topLanguages={data?.topLanguages} 
+        />
 
         {/* ── Country chart + Event breakdown ──────────────────────── */}
         <section aria-labelledby="geo-events-heading" className="space-y-4">

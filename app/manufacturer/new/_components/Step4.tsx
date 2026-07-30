@@ -6,6 +6,7 @@ import { useEditor } from '@/context/ManualEditorContext'
 import { AIProcessingOverlay } from '@/components/AIProcessingOverlay'
 import { FileText, Globe, Upload, LayoutList, Eye, Lock, FileDown, QrCode, BookOpen, Printer, ClipboardCheck, Send, Rocket } from 'lucide-react'
 import type { OutputFormat } from '@/lib/types'
+import { authFetch } from '@/lib/apiClient'
 
 const OUTPUT_FORMAT_OPTIONS: { value: OutputFormat; Icon: React.FC<{ className?: string; style?: React.CSSProperties; 'aria-hidden'?: boolean | 'true' | 'false' }>; title: string; desc: string }[] = [
   { value: 'web',         Icon: Globe,    title: 'Web (Interactive)',   desc: 'Responsive viewer with AI chat and search. Always included.' },
@@ -56,7 +57,7 @@ export function Step4({ isEdit = false }: { isEdit?: boolean }) {
       const url = isEdit && manualId ? `/api/manuals/${manualId}` : '/api/manuals'
       const method = isEdit && manualId ? 'PUT' : 'POST'
 
-      const res = await fetch(url, {
+      const res = await authFetch(url, {
         method,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),

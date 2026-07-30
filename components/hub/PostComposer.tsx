@@ -5,6 +5,7 @@ import { Link2, X, Loader2, Send } from 'lucide-react'
 import { MediaUploader } from './MediaUploader'
 import type { MediaAttachment, HubPost } from '@/lib/types'
 import Link from 'next/link'
+import Image from 'next/image'
 import { authFetch } from "@/lib/apiClient"
 
 interface PostComposerProps {
@@ -80,12 +81,11 @@ export function PostComposer({ currentUser, onPost, manualId, placeholder }: Pos
         style={{ background: 'var(--color-card)', borderColor: 'var(--color-border)' }}>
         <div className="flex gap-3 p-4">
           {/* Avatar */}
-          <div className="w-10 h-10 rounded-full shrink-0 overflow-hidden flex items-center justify-center text-sm font-bold select-none"
+          <div className="relative w-10 h-10 rounded-full shrink-0 overflow-hidden flex items-center justify-center text-sm font-bold select-none"
             style={{ background: 'var(--color-primary)', color: '#04140e' }}
             aria-hidden>
             {currentUser.avatarUrl
-              // eslint-disable-next-line @next/next/no-img-element
-              ? <img src={currentUser.avatarUrl} alt="" className="w-full h-full object-cover" />
+              ? <Image src={currentUser.avatarUrl} alt="" fill className="object-cover" />
               : currentUser.name[0]?.toUpperCase()
             }
           </div>
