@@ -25,28 +25,28 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
 /* ─── Hero ─────────────────────────────────────────────────────────────── */
 function Hero() {
   return (
-    <section className="overflow-hidden bg-white" aria-labelledby="hero-heading">
+    <section className="overflow-hidden bg-background" aria-labelledby="hero-heading">
       <div className="container">
         <div className="grid md:grid-cols-2 gap-12 md:gap-20 items-center py-16 md:py-24 lg:py-28">
 
           {/* Left — text */}
           <div className="order-2 md:order-1">
             {/* Pill badge */}
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold mb-8 border border-emerald-200 bg-emerald-50 text-emerald-700">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold mb-8 border border-emerald-200 dark:border-emerald-900/50 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400">
               <Sparkles className="w-3 h-3" aria-hidden="true" />
               AI-Powered Manual Platform
             </div>
 
             <h1
               id="hero-heading"
-              className="text-4xl sm:text-5xl lg:text-[3.75rem] font-bold text-slate-900 tracking-tight leading-[1.06] mb-6 text-balance"
+              className="text-4xl sm:text-5xl lg:text-[3.75rem] font-bold text-slate-900 dark:text-white tracking-tight leading-[1.06] mb-6 text-balance"
             >
               Product manuals{' '}
               <span style={{ color: 'var(--color-primary)' }}>people</span>{' '}
               actually use
             </h1>
 
-            <p className="text-lg text-slate-500 leading-relaxed mb-8 max-w-[460px]">
+            <p className="text-lg text-slate-500 dark:text-slate-400 leading-relaxed mb-8 max-w-[460px]">
               Replace paper manuals with accessible, AI-powered digital guides.
               High-contrast, multilingual, instant AI chat — built for everyone.
             </p>
@@ -64,7 +64,7 @@ function Hero() {
             {/* Trust signals */}
             <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
               {['No credit card required', 'WCAG 2.2 AAA', 'Free plan available'].map((t) => (
-                <span key={t} className="flex items-center gap-1.5 text-xs text-slate-400 font-medium">
+                <span key={t} className="flex items-center gap-1.5 text-xs text-slate-400 dark:text-slate-500 font-medium">
                   <Check className="w-3 h-3 shrink-0" style={{ color: 'var(--color-primary)' }} aria-hidden="true" />
                   {t}
                 </span>
@@ -73,7 +73,7 @@ function Hero() {
           </div>
 
           {/* Right — hero image */}
-          <div className="order-1 md:order-2 rounded-2xl overflow-hidden border border-slate-200 shadow-2xl shadow-slate-200/60">
+          <div className="order-1 md:order-2 rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 shadow-2xl shadow-slate-200/60 dark:shadow-none">
             <Image
               src="/images/hero.png"
               alt="Split illustration: frustrated user struggling with paper manual on the left, happy user accessing digital guide on phone on the right"
@@ -110,7 +110,7 @@ function GetStartedSection() {
   return (
     <section
       id="get-started"
-      className="py-20 md:py-28 bg-slate-50 border-y border-slate-100"
+      className="py-20 md:py-28 bg-slate-50 dark:bg-slate-900/50 border-y border-slate-100 dark:border-slate-800"
       aria-labelledby="get-started-heading"
     >
       <div className="container">
@@ -118,18 +118,18 @@ function GetStartedSection() {
           <SectionLabel>Get Started</SectionLabel>
           <h2
             id="get-started-heading"
-            className="text-3xl md:text-4xl lg:text-5xl font-bold text-slate-900 tracking-tight mb-5 text-balance"
+            className="text-3xl md:text-4xl lg:text-5xl font-bold text-slate-900 dark:text-white tracking-tight mb-5 text-balance"
           >
             How will you use ClearGuide?
           </h2>
-          <p className="text-base text-slate-500 leading-relaxed max-w-lg mx-auto">
+          <p className="text-base text-slate-500 dark:text-slate-400 leading-relaxed max-w-lg mx-auto">
             Choose your account type to get started. You can always switch later.
           </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
           {/* User card */}
-          <div className="rounded-2xl border border-slate-200 bg-white p-8 flex flex-col gap-6 shadow-sm hover:shadow-md transition-shadow">
+          <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-8 flex flex-col gap-6 shadow-sm hover:shadow-md transition-shadow">
             <div className="flex items-center gap-3">
               <div
                 className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0"
@@ -139,10 +139,10 @@ function GetStartedSection() {
                 <UserRound className="w-6 h-6" style={{ color: 'var(--color-primary)' }} />
               </div>
               <div>
-                <h3 className="font-bold text-xl text-slate-900 leading-snug">
+                <h3 className="font-bold text-xl text-slate-900 dark:text-white leading-snug">
                   I&apos;m a User
                 </h3>
-                <p className="text-xs text-slate-500">
+                <p className="text-xs text-slate-500 dark:text-slate-400">
                   Consumer / end user
                 </p>
               </div>
@@ -150,7 +150,7 @@ function GetStartedSection() {
 
             <ul className="flex flex-col gap-2.5" aria-label="User account benefits">
               {USER_BENEFITS.map((b) => (
-                <li key={b} className="flex items-start gap-2.5 text-sm text-slate-700">
+                <li key={b} className="flex items-start gap-2.5 text-sm text-slate-700 dark:text-slate-300">
                   <Check
                     className="w-4 h-4 mt-0.5 shrink-0"
                     style={{ color: 'var(--color-primary)' }}
@@ -161,7 +161,7 @@ function GetStartedSection() {
               ))}
             </ul>
 
-            <div className="flex flex-col gap-2.5 mt-auto pt-4 border-t border-slate-100">
+            <div className="flex flex-col gap-2.5 mt-auto pt-4 border-t border-slate-100 dark:border-slate-800">
               <Link
                 href="/user/sign-up"
                 className="btn-primary text-sm text-center flex items-center justify-center gap-2"
@@ -171,13 +171,13 @@ function GetStartedSection() {
               </Link>
               <a
                 href="#find-your-product"
-                className="btn-outline text-sm text-center flex items-center justify-center gap-2 border-slate-200 text-slate-700 hover:border-slate-400 hover:bg-slate-50"
+                className="btn-outline text-sm text-center flex items-center justify-center gap-2 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:border-slate-400 dark:hover:border-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800"
               >
                 Continue as guest
               </a>
               <Link
                 href="/user/sign-in"
-                className="btn-ghost text-sm text-center text-slate-500 hover:text-slate-900"
+                className="btn-ghost text-sm text-center text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
               >
                 Already have an account? Sign in
               </Link>
@@ -185,9 +185,9 @@ function GetStartedSection() {
           </div>
 
           {/* Manufacturer card */}
-          <div className="rounded-2xl border border-slate-200 bg-white p-8 flex flex-col gap-6 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden">
+          <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-8 flex flex-col gap-6 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden">
             <div
-              className="absolute top-4 right-4 text-xs font-semibold px-2.5 py-1 rounded-full border border-emerald-200 bg-emerald-50 text-emerald-700"
+              className="absolute top-4 right-4 text-xs font-semibold px-2.5 py-1 rounded-full border border-emerald-200 dark:border-emerald-900/50 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400"
             >
               For businesses
             </div>
@@ -201,10 +201,10 @@ function GetStartedSection() {
                 <Building2 className="w-6 h-6" style={{ color: 'var(--color-primary)' }} />
               </div>
               <div>
-                <h3 className="font-bold text-xl text-slate-900 leading-snug">
+                <h3 className="font-bold text-xl text-slate-900 dark:text-white leading-snug">
                   I&apos;m a Manufacturer
                 </h3>
-                <p className="text-xs text-slate-500">
+                <p className="text-xs text-slate-500 dark:text-slate-400">
                   Brand / product company
                 </p>
               </div>
@@ -212,7 +212,7 @@ function GetStartedSection() {
 
             <ul className="flex flex-col gap-2.5" aria-label="Manufacturer account benefits">
               {MFG_BENEFITS.map((b) => (
-                <li key={b} className="flex items-start gap-2.5 text-sm text-slate-700">
+                <li key={b} className="flex items-start gap-2.5 text-sm text-slate-700 dark:text-slate-300">
                   <Check
                     className="w-4 h-4 mt-0.5 shrink-0"
                     style={{ color: 'var(--color-primary)' }}
@@ -223,7 +223,7 @@ function GetStartedSection() {
               ))}
             </ul>
 
-            <div className="flex flex-col gap-2.5 mt-auto pt-4 border-t border-slate-100">
+            <div className="flex flex-col gap-2.5 mt-auto pt-4 border-t border-slate-100 dark:border-slate-800">
               <Link
                 href="/manufacturer/sign-up"
                 className="btn-primary text-sm text-center flex items-center justify-center gap-2"
@@ -233,7 +233,7 @@ function GetStartedSection() {
               </Link>
               <Link
                 href="/manufacturer/sign-in"
-                className="btn-ghost text-sm text-center text-slate-500 hover:text-slate-900"
+                className="btn-ghost text-sm text-center text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
               >
                 Already have a company account? Sign in
               </Link>
@@ -275,7 +275,7 @@ const whyFeatures = [
 
 function WhyClearGuide() {
   return (
-    <section id="about" className="py-20 md:py-28 bg-white" aria-labelledby="why-heading">
+    <section id="about" className="py-20 md:py-28 bg-background" aria-labelledby="why-heading">
       <div className="container">
         <div className="grid md:grid-cols-2 gap-16 items-start">
 
@@ -284,13 +284,13 @@ function WhyClearGuide() {
             <SectionLabel>Why ClearGuide?</SectionLabel>
             <h2
               id="why-heading"
-              className="text-3xl md:text-4xl lg:text-5xl font-bold text-slate-900 leading-tight mb-6 tracking-tight text-balance"
+              className="text-3xl md:text-4xl lg:text-5xl font-bold text-slate-900 dark:text-white leading-tight mb-6 tracking-tight text-balance"
             >
               The smarter choice for{' '}
               <em className="not-italic" style={{ color: 'var(--color-primary)' }}>accessible</em>{' '}
               manuals
             </h2>
-            <p className="text-base text-slate-500 leading-relaxed max-w-sm">
+            <p className="text-base text-slate-500 dark:text-slate-400 leading-relaxed max-w-sm">
               Traditional paper manuals exclude millions of users. ClearGuide turns
               them into living, accessible digital experiences that work for everyone.
             </p>
@@ -301,7 +301,7 @@ function WhyClearGuide() {
             {whyFeatures.map((f) => (
               <article
                 key={f.title}
-                className="rounded-2xl border border-slate-100 p-6 bg-slate-50 hover:border-emerald-200 hover:bg-emerald-50/40 transition-colors group"
+                className="rounded-2xl border border-slate-100 dark:border-slate-800 p-6 bg-slate-50 dark:bg-slate-900 hover:border-emerald-200 dark:hover:border-emerald-900/50 hover:bg-emerald-50/40 dark:hover:bg-emerald-900/20 transition-colors group"
               >
                 <div
                   className="w-10 h-10 rounded-xl flex items-center justify-center mb-4 transition-colors group-hover:bg-emerald-100/60"
@@ -310,8 +310,8 @@ function WhyClearGuide() {
                 >
                   <f.icon className="w-5 h-5" style={{ color: 'var(--color-primary)' }} />
                 </div>
-                <h3 className="text-sm font-bold text-slate-900 mb-2 tracking-tight">{f.title}</h3>
-                <p className="text-sm text-slate-500 leading-relaxed">{f.description}</p>
+                <h3 className="text-sm font-bold text-slate-900 dark:text-white mb-2 tracking-tight">{f.title}</h3>
+                <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">{f.description}</p>
               </article>
             ))}
           </div>
@@ -390,14 +390,14 @@ const platformFeatures = [
 
 function PlatformFeatures() {
   return (
-    <section id="features" className="py-20 md:py-28 bg-slate-50" aria-labelledby="platform-heading">
+    <section id="features" className="py-20 md:py-28 bg-slate-50 dark:bg-slate-900/50" aria-labelledby="platform-heading">
       <div className="container">
         <header className="mb-14">
           <SectionLabel>Platform Features</SectionLabel>
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
             <h2
               id="platform-heading"
-              className="text-3xl md:text-4xl lg:text-5xl font-bold text-slate-900 tracking-tight max-w-xl text-balance"
+              className="text-3xl md:text-4xl lg:text-5xl font-bold text-slate-900 dark:text-white tracking-tight max-w-xl text-balance"
             >
               Every tool to elevate your manuals
             </h2>
@@ -415,7 +415,7 @@ function PlatformFeatures() {
               <article
                 key={f.title}
                 className={`rounded-2xl p-7 border flex items-start gap-5 transition-shadow hover:shadow-lg ${
-                  dark ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-100'
+                  dark ? 'bg-slate-900 border-slate-800' : 'bg-white dark:bg-slate-900 border-slate-100 dark:border-slate-800'
                 }`}
               >
                 <div
@@ -438,14 +438,12 @@ function PlatformFeatures() {
                     {f.badge}
                   </span>
                   <h3
-                    className="text-base font-bold mb-2 tracking-tight"
-                    style={{ color: dark ? '#fff' : '#0f172a' }}
+                    className={`text-base font-bold mb-2 tracking-tight ${dark ? 'text-white' : 'text-slate-900 dark:text-white'}`}
                   >
                     {f.title}
                   </h3>
                   <p
-                    className="text-sm leading-relaxed"
-                    style={{ color: dark ? 'rgba(255,255,255,0.55)' : '#64748b' }}
+                    className={`text-sm leading-relaxed ${dark ? 'text-white/55' : 'text-slate-500 dark:text-slate-400'}`}
                   >
                     {f.description}
                   </p>
@@ -480,17 +478,17 @@ const withList = [
 
 function BeforeAfter() {
   return (
-    <section className="py-20 md:py-28 bg-white" aria-labelledby="ba-heading">
+    <section className="py-20 md:py-28 bg-background" aria-labelledby="ba-heading">
       <div className="container">
         <header className="mb-14 text-center">
           <SectionLabel>The Difference</SectionLabel>
           <h2
             id="ba-heading"
-            className="text-3xl md:text-4xl lg:text-5xl font-bold text-slate-900 tracking-tight mb-4 text-balance"
+            className="text-3xl md:text-4xl lg:text-5xl font-bold text-slate-900 dark:text-white tracking-tight mb-4 text-balance"
           >
             Before &amp; after ClearGuide
           </h2>
-          <p className="text-base text-slate-500 max-w-sm mx-auto leading-relaxed">
+          <p className="text-base text-slate-500 dark:text-slate-400 max-w-sm mx-auto leading-relaxed">
             See how the experience transforms when manuals are built for people, not paper.
           </p>
         </header>
@@ -508,7 +506,7 @@ function BeforeAfter() {
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" aria-hidden="true" />
             <figcaption className="absolute bottom-4 left-4">
-              <span className="inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-full bg-white text-red-600 shadow">
+              <span className="inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-full bg-white dark:bg-slate-900 text-red-600 dark:text-red-500 shadow">
                 <X className="w-3 h-3" aria-hidden="true" />
                 Without ClearGuide
               </span>
@@ -539,16 +537,16 @@ function BeforeAfter() {
 
         {/* Comparison lists */}
         <div className="grid sm:grid-cols-2 gap-5">
-          <div className="rounded-2xl border border-red-100 bg-red-50/60 p-7">
-            <h3 className="text-sm font-bold text-slate-900 mb-5 flex items-center gap-2">
-              <span className="w-5 h-5 rounded-full bg-red-100 flex items-center justify-center shrink-0">
+          <div className="rounded-2xl border border-red-100 dark:border-red-900/30 bg-red-50/60 dark:bg-red-900/10 p-7">
+            <h3 className="text-sm font-bold text-slate-900 dark:text-white mb-5 flex items-center gap-2">
+              <span className="w-5 h-5 rounded-full bg-red-100 dark:bg-red-900/50 flex items-center justify-center shrink-0">
                 <X className="w-3 h-3 text-red-500" aria-hidden="true" />
               </span>
               Without ClearGuide
             </h3>
             <ul className="flex flex-col gap-3" aria-label="Problems without ClearGuide">
               {withoutList.map((item) => (
-                <li key={item} className="flex items-start gap-3 text-sm text-slate-500">
+                <li key={item} className="flex items-start gap-3 text-sm text-slate-500 dark:text-slate-400">
                   <X className="w-4 h-4 shrink-0 mt-0.5 text-red-400" aria-hidden="true" />
                   <span>{item}</span>
                 </li>
@@ -556,8 +554,8 @@ function BeforeAfter() {
             </ul>
           </div>
 
-          <div className="rounded-2xl border border-emerald-100 bg-emerald-50/60 p-7">
-            <h3 className="text-sm font-bold text-slate-900 mb-5 flex items-center gap-2">
+          <div className="rounded-2xl border border-emerald-100 dark:border-emerald-900/30 bg-emerald-50/60 dark:bg-emerald-900/10 p-7">
+            <h3 className="text-sm font-bold text-slate-900 dark:text-white mb-5 flex items-center gap-2">
               <span
                 className="w-5 h-5 rounded-full flex items-center justify-center shrink-0"
                 style={{ backgroundColor: 'var(--color-primary-subtle)' }}
@@ -568,7 +566,7 @@ function BeforeAfter() {
             </h3>
             <ul className="flex flex-col gap-3" aria-label="Benefits with ClearGuide">
               {withList.map((item) => (
-                <li key={item} className="flex items-start gap-3 text-sm text-slate-600">
+                <li key={item} className="flex items-start gap-3 text-sm text-slate-600 dark:text-slate-300">
                   <Check className="w-4 h-4 shrink-0 mt-0.5" style={{ color: 'var(--color-primary)' }} aria-hidden="true" />
                   <span>{item}</span>
                 </li>
@@ -729,14 +727,14 @@ const testimonials = [
 
 function Testimonials() {
   return (
-    <section className="py-20 md:py-28 bg-slate-50" aria-labelledby="testimonials-heading">
+    <section className="py-20 md:py-28 bg-slate-50 dark:bg-slate-900/50" aria-labelledby="testimonials-heading">
       <div className="container">
         <header className="mb-14">
           <SectionLabel>Testimonials</SectionLabel>
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
             <h2
               id="testimonials-heading"
-              className="text-3xl md:text-4xl lg:text-5xl font-bold text-slate-900 tracking-tight text-balance"
+              className="text-3xl md:text-4xl lg:text-5xl font-bold text-slate-900 dark:text-white tracking-tight text-balance"
             >
               Real results from real users
             </h2>
@@ -749,7 +747,7 @@ function Testimonials() {
                   aria-hidden="true"
                 />
               ))}
-              <span className="text-sm font-semibold text-slate-700 ml-1">5.0</span>
+              <span className="text-sm font-semibold text-slate-700 dark:text-slate-300 ml-1">5.0</span>
             </div>
           </div>
         </header>
@@ -761,7 +759,7 @@ function Testimonials() {
               className={`rounded-2xl p-7 flex flex-col gap-5 border transition-shadow hover:shadow-lg ${
                 i === 1
                   ? 'bg-slate-900 border-slate-800'
-                  : 'bg-white border-slate-100'
+                  : 'bg-white dark:bg-slate-900 border-slate-100 dark:border-slate-800'
               }`}
             >
               <div className="flex items-center gap-0.5" aria-label={`${t.rating} out of 5 stars`}>
@@ -776,8 +774,7 @@ function Testimonials() {
               </div>
 
               <blockquote
-                className="text-base leading-relaxed flex-1 font-medium"
-                style={{ color: i === 1 ? '#ffffff' : '#1e293b' }}
+                className={`text-base leading-relaxed flex-1 font-medium ${i === 1 ? 'text-white' : 'text-slate-800 dark:text-slate-200'}`}
               >
                 &ldquo;{t.quote}&rdquo;
               </blockquote>
@@ -797,10 +794,10 @@ function Testimonials() {
                   {t.initials}
                 </div>
                 <div>
-                  <p className="text-sm font-bold" style={{ color: i === 1 ? '#fff' : '#0f172a' }}>
+                  <p className={`text-sm font-bold ${i === 1 ? 'text-white' : 'text-slate-900 dark:text-white'}`}>
                     {t.name}
                   </p>
-                  <p className="text-xs" style={{ color: i === 1 ? 'rgba(255,255,255,0.4)' : '#64748b' }}>
+                  <p className={`text-xs ${i === 1 ? 'text-white/40' : 'text-slate-500 dark:text-slate-400'}`}>
                     {t.role}{t.company ? `, ${t.company}` : ''}
                   </p>
                 </div>
@@ -860,7 +857,7 @@ const plans = [
 
 function Pricing() {
   return (
-    <section id="pricing" className="py-20 md:py-28 bg-white" aria-labelledby="pricing-heading">
+    <section id="pricing" className="py-20 md:py-28 bg-background" aria-labelledby="pricing-heading">
       <div className="container">
         <header className="mb-14">
           <SectionLabel>Pricing</SectionLabel>
@@ -883,7 +880,7 @@ function Pricing() {
               key={plan.name}
               aria-label={`${plan.name} plan`}
               className={`rounded-2xl p-8 flex flex-col gap-6 border relative ${
-                plan.highlight ? 'bg-slate-900 border-slate-700' : 'bg-white border-slate-100'
+                plan.highlight ? 'bg-slate-900 border-slate-700' : 'bg-white dark:bg-slate-900 border-slate-100 dark:border-slate-800'
               }`}
             >
               {plan.highlight && (
@@ -897,43 +894,38 @@ function Pricing() {
 
               <div>
                 <p
-                  className="text-xs font-bold uppercase tracking-widest mb-3"
-                  style={{ color: plan.highlight ? 'rgba(255,255,255,0.4)' : '#94a3b8' }}
+                  className={`text-xs font-bold uppercase tracking-widest mb-3 ${plan.highlight ? 'text-white/40' : 'text-slate-400'}`}
                 >
                   {plan.name}
                 </p>
                 <div className="flex items-baseline gap-1 mb-2">
                   <span
-                    className="text-4xl font-bold tabular-nums tracking-tight"
-                    style={{ color: plan.highlight ? '#fff' : '#0f172a' }}
+                    className={`text-4xl font-bold tabular-nums tracking-tight ${plan.highlight ? 'text-white' : 'text-slate-900 dark:text-white'}`}
                   >
                     {plan.price}
                   </span>
                   {plan.period && (
                     <span
-                      className="text-sm"
-                      style={{ color: plan.highlight ? 'rgba(255,255,255,0.35)' : '#94a3b8' }}
+                      className={`text-sm ${plan.highlight ? 'text-white/35' : 'text-slate-400'}`}
                     >
                       {plan.period}
                     </span>
                   )}
                 </div>
                 <p
-                  className="text-sm"
-                  style={{ color: plan.highlight ? 'rgba(255,255,255,0.45)' : '#64748b' }}
+                  className={`text-sm ${plan.highlight ? 'text-white/45' : 'text-slate-500 dark:text-slate-400'}`}
                 >
                   {plan.description}
                 </p>
               </div>
 
-              <hr style={{ borderColor: plan.highlight ? 'rgba(255,255,255,0.08)' : '#e2e8f0' }} />
+              <hr className={plan.highlight ? 'border-white/10' : 'border-slate-200 dark:border-slate-800'} />
 
               <ul className="flex flex-col gap-3 flex-1" aria-label={`${plan.name} plan features`}>
                 {plan.features.map((f) => (
                   <li
                     key={f}
-                    className="flex items-center gap-2.5 text-sm"
-                    style={{ color: plan.highlight ? 'rgba(255,255,255,0.8)' : '#334155' }}
+                    className={`flex items-center gap-2.5 text-sm ${plan.highlight ? 'text-white/80' : 'text-slate-700 dark:text-slate-300'}`}
                   >
                     <div
                       className="w-5 h-5 rounded-full flex items-center justify-center shrink-0"
@@ -1016,7 +1008,7 @@ const faqs = [
 
 function FAQ() {
   return (
-    <section id="faq" className="py-20 md:py-28 bg-slate-50" aria-labelledby="faq-heading">
+    <section id="faq" className="py-20 md:py-28 bg-slate-50 dark:bg-slate-900/50" aria-labelledby="faq-heading">
       <div className="container">
         <div className="grid md:grid-cols-[260px_1fr] gap-14 items-start">
 
@@ -1025,11 +1017,11 @@ function FAQ() {
             <SectionLabel>FAQ</SectionLabel>
             <h2
               id="faq-heading"
-              className="text-3xl md:text-4xl font-bold text-slate-900 leading-tight mb-5 tracking-tight text-balance"
+              className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white leading-tight mb-5 tracking-tight text-balance"
             >
               Frequently asked questions
             </h2>
-            <p className="text-sm text-slate-500 leading-relaxed mb-7">
+            <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed mb-7">
               Can&apos;t find what you&apos;re looking for? We&apos;ll get back to you within one business day.
             </p>
             <Link href="/sign-up" className="btn-primary text-sm">
@@ -1038,17 +1030,17 @@ function FAQ() {
           </div>
 
           {/* Accordion */}
-          <div className="rounded-2xl overflow-hidden border border-slate-100 bg-white divide-y divide-slate-100">
+          <div className="rounded-2xl overflow-hidden border border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 divide-y divide-slate-100 dark:divide-slate-800">
             {faqs.map((faq) => (
               <details key={faq.q} className="group">
                 <summary className="flex items-center justify-between gap-4 px-6 py-5 cursor-pointer list-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-emerald-400">
-                  <span className="text-sm font-semibold text-slate-900">{faq.q}</span>
+                  <span className="text-sm font-semibold text-slate-900 dark:text-white">{faq.q}</span>
                   <ChevronDown
                     className="w-4 h-4 text-slate-400 shrink-0 transition-transform duration-200 group-open:rotate-180"
                     aria-hidden="true"
                   />
                 </summary>
-                <p className="px-6 pb-6 text-sm text-slate-500 leading-relaxed">
+                <p className="px-6 pb-6 text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
                   {faq.a}
                 </p>
               </details>

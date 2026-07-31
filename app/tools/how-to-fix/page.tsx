@@ -1,11 +1,13 @@
 'use client';
 
 import { useState } from 'react';
-import { Bot, ArrowLeft } from 'lucide-react';
+import { Bot, ArrowLeft, Menu } from 'lucide-react';
 import Link from 'next/link';
 import { ChatInputArea } from '../../../components/fixbot/ChatInputArea';
 import { SuggestionCards } from '../../../components/fixbot/SuggestionCards';
 import { MessageBubble } from '../../../components/fixbot/MessageBubble';
+import { FixBotSidebar } from '../../../components/fixbot/FixBotSidebar';
+import { useAuth } from '../../../hooks/useAuth';
 
 type Message = {
   id: string;
@@ -16,6 +18,10 @@ type Message = {
 export default function FixBotPage() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const { user } = useAuth();
+
+  const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
   const handleSendMessage = async (text: string, file?: File) => {
     // Add user message
@@ -26,15 +32,14 @@ export default function FixBotPage() {
     try {
       let body;
       let headers: HeadersInit = { 'Content-Type': 'application/json' };
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
 
       if (file) {
         // 1. Get Signed URL
-        const token = typeof window !== 'undefined' ? sessionStorage.getItem('token') : null;
+        const token = user ? await user.getIdToken() : null;
         const uploadHeaders: HeadersInit = { 'Content-Type': 'application/json' };
         if (token) uploadHeaders['Authorization'] = `Bearer ${token}`;
 
-        const signRes = await fetch(`${apiUrl}/api/upload/diagnostic-signed-url`, {
+        const signRes = await fetch(`/api/upload/diagnostic-signed-url`, {
           method: 'POST',
           headers: uploadHeaders,
           body: JSON.stringify({ fileName: file.name, contentType: file.type }),
@@ -64,7 +69,7 @@ export default function FixBotPage() {
       }
 
       // Backend call to the proxy route
-      const res = await fetch(`${apiUrl}/api/fixbot/chat`, {
+      const res = await fetch(`/api/fixbot/chat`, {
         method: 'POST',
         headers,
         body,
@@ -90,15 +95,20 @@ export default function FixBotPage() {
   };
 
   return (
-    <div className="flex h-screen bg-white overflow-hidden">
+    <div className="flex h-screen bg-white overflow-hidden relative">
+      <FixBotSidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
+      
       {/* Main Chat Area */}
-      <main className="flex-1 flex flex-col h-full relative w-full max-w-5xl mx-auto">
+      <main className="flex-1 flex flex-col h-full relative w-full min-w-0 mx-auto">
         {/* Top Header */}
         <header className="absolute top-0 left-0 w-full h-16 flex items-center justify-between px-4 z-10 bg-white/80 backdrop-blur-sm border-b border-slate-100">
           <div className="flex items-center gap-2">
+            <button className="md:hidden p-2 text-slate-500 hover:text-slate-800" onClick={toggleSidebar}>
+              <Menu className="w-5 h-5" />
+            </button>
             <Link href="/" className="p-2 text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded-lg transition-colors flex items-center gap-2 font-medium">
               <ArrowLeft className="w-5 h-5" />
-              <span>Back to Home</span>
+              <span className="hidden sm:inline">Back to Home</span>
             </Link>
           </div>
           <button className="bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 text-white text-sm font-bold px-4 py-2 rounded-lg shadow-sm transition-all hover:shadow-md flex items-center gap-1.5">
@@ -117,7 +127,7 @@ export default function FixBotPage() {
                   <Bot className="w-16 h-16" />
                 </div>
               </div>
-              <h1 className="text-4xl font-extrabold text-slate-900 mb-8 tracking-tight">How can we help?</h1>
+              <h1 className="text-4xl font-extrabold text-slate-900 mb-8 tracking-tight text-center">How can we help?</h1>
               <SuggestionCards onSelect={handleSuggestionSelect} />
             </div>
           ) : (

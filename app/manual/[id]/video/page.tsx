@@ -9,6 +9,7 @@ import { AccessibilityProvider, useAccessibility } from '@/context/Accessibility
 import { ViewerHeader } from '@/components/ViewerHeader'
 import { ViewerTabBar } from '@/components/ViewerTabBar'
 import { useRef, useEffect } from 'react'
+import { useAnalyticsTimeTracker } from '@/hooks/useAnalyticsTimeTracker'
 
 // ---------------------------------------------------------------------------
 // Lazy VideoPlayer (SSR off)
@@ -136,6 +137,9 @@ function VideoModeContent({ manual }: { manual: Manual }) {
   const [selectedLang, setSelectedLang] = useState(manual.languages[0] ?? 'en')
 
   const { fontSizeClass, highContrast } = useAccessibility()
+  const [isGenerating, setIsGenerating] = useState(false)
+
+  useAnalyticsTimeTracker(manualId, 'video')
 
   const section = manual.sections[activeIndex]
   const total   = manual.sections.length
@@ -241,18 +245,52 @@ function VideoModeContent({ manual }: { manual: Manual }) {
             </div>
 
             {/* Video player / AI Frame */}
-            {manual.videoGenerationStatus === 'pending' ? (
-              <div className="w-full aspect-video flex flex-col items-center justify-center p-12 border rounded-2xl bg-card text-center gap-4">
-                <Loader2 className="w-10 h-10 animate-spin text-primary" />
+            {manual.videoGenerationStatus === 'pending' || isGenerating ? (
+              <div className="w-full aspect-video flex flex-col items-center justify-center p-12 border rounded-2xl text-center gap-4" style={{ backgroundColor: 'var(--color-card)' }}>
+                <Loader2 className="w-10 h-10 animate-spin text-primary" style={{ color: 'var(--color-primary)' }} />
                 <div>
-                  <h3 className="font-semibold">AI is animating this procedure</h3>
-                  <p className="text-sm text-muted-foreground mt-1">This will only take a moment.</p>
+                  <h3 className="font-semibold text-foreground">AI is animating this procedure</h3>
+                  <p className="text-sm text-muted-foreground mt-1" style={{ color: 'var(--color-muted-foreground)' }}>This will only take a moment.</p>
                 </div>
               </div>
             ) : manual.videoData?.frames && manual.videoData.frames[activeIndex] ? (
               <AIVideoFrame frame={manual.videoData.frames[activeIndex]} />
+            ) : section?.videoUrls && section.videoUrls.length > 0 ? (
+              <VideoPlayer src={section.videoUrls[0]} title={section.title} />
             ) : (
-              <VideoPlayer src={section.videoUrls?.[0]} title={section.title} />
+              <div className="w-full aspect-video flex flex-col items-center justify-center p-12 border rounded-2xl text-center gap-4" style={{ backgroundColor: 'var(--color-card)' }}>
+                <Volume2 className="w-12 h-12 text-muted-foreground mb-2" style={{ color: 'var(--color-muted-foreground)' }} />
+                <div>
+                  <h3 className="font-semibold text-lg text-foreground">No Video Available</h3>
+                  <p className="text-sm text-muted-foreground mt-1 max-w-sm mx-auto" style={{ color: 'var(--color-muted-foreground)' }}>
+                    Would you like our AI to automatically generate a step-by-step video animation for this procedure?
+                  </p>
+                </div>
+                <button
+                  onClick={async () => {
+                    setIsGenerating(true)
+                    try {
+                      await fetch('/api/generate-video', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                          manualId: manual.id,
+                          procedureTitle: section.title,
+                          repairSteps: [section.content]
+                        })
+                      })
+                      // The SWR interval will pick up the pending status
+                    } catch (e) {
+                      console.error('Failed to trigger video generation', e)
+                      setIsGenerating(false)
+                    }
+                  }}
+                  className="mt-2 px-6 py-2.5 rounded-full font-medium text-white transition-opacity hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2"
+                  style={{ backgroundColor: 'var(--color-primary)' }}
+                >
+                  Generate AI Video Walkthrough
+                </button>
+              </div>
             )}
 
             {/* Audio description / caption */}

@@ -12,6 +12,8 @@ import { LANGUAGE_LABELS } from '@/components/ViewerHeader'
 import { useEndUser } from '@/hooks/useEndUser'
 import { ReviewsSection } from '@/components/community/ReviewsSection'
 import { ForumSection } from '@/components/community/ForumSection'
+import Image from 'next/image'
+import { useAnalyticsTimeTracker } from '@/hooks/useAnalyticsTimeTracker'
 
 // ---------------------------------------------------------------------------
 // Types
@@ -117,38 +119,7 @@ export default function ManualHubPage() {
 
   const { user, isAuthenticated } = useEndUser()
 
-  useEffect(() => {
-    if (!manualId) return
-    const trackView = async () => {
-      const ua = navigator.userAgent.toLowerCase()
-      const isTablet = /ipad|tablet/i.test(ua)
-      const isMobile = /mobile|android|iphone|phone/i.test(ua)
-      const device = isTablet ? 'tablet' : isMobile ? 'mobile' : 'desktop'
-
-      let sessionId = sessionStorage.getItem('cg_session_id')
-      if (!sessionId) {
-        sessionId = Math.random().toString(36).substring(2)
-        sessionStorage.setItem('cg_session_id', sessionId)
-      }
-
-      try {
-        await fetch(`/api/manuals/${manualId}/analytics/events`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            userSessionId: sessionId,
-            mode: 'web',
-            timeSpentSeconds: Math.floor(Math.random() * 120) + 10, // Mocked time spent per view for demonstration
-            device,
-            language: navigator.language || 'en-US'
-          })
-        })
-      } catch (e) {
-        console.error('Analytics tracking failed', e)
-      }
-    }
-    trackView()
-  }, [manualId])
+  useAnalyticsTimeTracker(manualId, 'web')
 
   const [selectedLang, setSelectedLang] = useState<string | null>(null)
   const [langOpen, setLangOpen]         = useState(false)
@@ -348,11 +319,11 @@ export default function ManualHubPage() {
               }}
             >
               {manual.coverImage ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
+                <Image
                   src={manual.coverImage}
                   alt={`${manual.productName} cover`}
-                  className="w-full h-full object-cover"
+                  fill
+                  className="object-cover"
                 />
               ) : (
                 <BookOpen className="w-8 h-8" style={{ color: 'var(--color-primary)' }} aria-hidden="true" />

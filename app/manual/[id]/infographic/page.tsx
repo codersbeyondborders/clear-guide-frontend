@@ -7,6 +7,9 @@ import { Loader2, AlertCircle, ImageOff } from 'lucide-react'
 import { AccessibilityProvider, useAccessibility } from '@/context/AccessibilityContext'
 import { ViewerHeader } from '@/components/ViewerHeader'
 import { ViewerTabBar } from '@/components/ViewerTabBar'
+import Image from 'next/image'
+import { useAnalyticsTimeTracker } from '@/hooks/useAnalyticsTimeTracker'
+import { X, ZoomIn } from 'lucide-react'
 
 // ---------------------------------------------------------------------------
 // Types
@@ -47,8 +50,11 @@ function InfographicContent({ manual }: { manual: Manual }) {
   const manualId = params.id as string
   const [selectedLang, setSelectedLang] = useState(manual.languages[0] ?? 'en')
   const [expanded, setExpanded] = useState<string | null>(null)
+  const [lightboxImage, setLightboxImage] = useState<string | null>(null)
 
   const { fontSizeClass, highContrast } = useAccessibility()
+
+  useAnalyticsTimeTracker(manualId, 'infographic')
 
   return (
     <div
@@ -125,12 +131,20 @@ function InfographicContent({ manual }: { manual: Manual }) {
                     }}
                   >
                     {hasImage ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img
-                        src={section.imageUrls[0]}
-                        alt={`${section.title} illustration`}
-                        className="w-full h-full object-cover"
-                      />
+                      <div 
+                        className="w-full h-full cursor-zoom-in group"
+                        onClick={() => setLightboxImage(section.imageUrls[0])}
+                      >
+                        <Image
+                          src={section.imageUrls[0]}
+                          alt={`${section.title} illustration`}
+                          fill
+                          className="object-cover transition-transform group-hover:scale-105"
+                        />
+                        <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                          <ZoomIn className="w-8 h-8 text-white" />
+                        </div>
+                      </div>
                     ) : (
                       <div className="w-full h-full flex items-center justify-center" aria-hidden="true">
                         <div
@@ -207,6 +221,30 @@ function InfographicContent({ manual }: { manual: Manual }) {
       </main>
 
       <ViewerTabBar manualId={manualId} activeMode="infographic" />
+
+      {/* Lightbox Modal */}
+      {lightboxImage && (
+        <div 
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 backdrop-blur-sm p-4"
+          onClick={() => setLightboxImage(null)}
+        >
+          <button 
+            className="absolute top-6 right-6 p-2 bg-black/50 hover:bg-black/80 rounded-full text-white transition-colors"
+            onClick={() => setLightboxImage(null)}
+            aria-label="Close Lightbox"
+          >
+            <X className="w-6 h-6" />
+          </button>
+          <div className="relative w-full max-w-5xl aspect-square md:aspect-[16/9]" onClick={(e) => e.stopPropagation()}>
+            <Image
+              src={lightboxImage}
+              alt="Zoomed infographic"
+              fill
+              className="object-contain"
+            />
+          </div>
+        </div>
+      )}
     </div>
   )
 }

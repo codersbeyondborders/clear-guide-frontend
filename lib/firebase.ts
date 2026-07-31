@@ -1,7 +1,7 @@
 import { initializeApp, getApps, getApp } from 'firebase/app'
-import { getAuth, GoogleAuthProvider } from 'firebase/auth'
-import { getFirestore } from 'firebase/firestore'
-import { getStorage } from 'firebase/storage'
+import { getAuth, GoogleAuthProvider, connectAuthEmulator } from 'firebase/auth'
+import { getFirestore, connectFirestoreEmulator } from 'firebase/firestore'
+import { getStorage, connectStorageEmulator } from 'firebase/storage'
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY || 'AIzaSyBZYcjc_an_mqMyjWjW2YhE9FFEDe5Ym_E',
@@ -19,3 +19,20 @@ export const auth = getAuth(app)
 export const db = getFirestore(app)
 export const storage = getStorage(app)
 export const googleProvider = new GoogleAuthProvider()
+
+// Connect to emulators if in development and flag is set
+if (process.env.NODE_ENV === 'development' && process.env.NEXT_PUBLIC_USE_FIREBASE_EMULATOR === 'true') {
+  // Prevent connecting twice in hot-reload
+  if (!(auth as any)._emulatorConnected) {
+    connectAuthEmulator(auth, 'http://127.0.0.1:9099', { disableWarnings: true })
+    ;(auth as any)._emulatorConnected = true
+  }
+  if (!(db as any)._emulatorConnected) {
+    connectFirestoreEmulator(db, '127.0.0.1', 8080)
+    ;(db as any)._emulatorConnected = true
+  }
+  if (!(storage as any)._emulatorConnected) {
+    connectStorageEmulator(storage, '127.0.0.1', 9199)
+    ;(storage as any)._emulatorConnected = true
+  }
+}

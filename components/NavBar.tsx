@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { BookOpen, Menu, X, UserRound, Building2, ChevronDown } from 'lucide-react'
-
+import { ThemeToggle } from '@/components/ThemeToggle'
 const MAIN_NAV_LINKS = [
   { label: 'About',        href: '#about'             },
   { label: 'Find Product', href: '#find-your-product' },
@@ -105,7 +105,7 @@ export function NavBar() {
               aria-expanded={mfgMenuOpen}
               aria-haspopup="menu"
               aria-label="Manufacturer portal"
-              className="btn-ghost text-sm text-slate-500 inline-flex items-center gap-1 whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 rounded"
+              className="btn-ghost text-sm text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 inline-flex items-center gap-1 whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 rounded"
             >
               <Building2 className="w-4 h-4" aria-hidden="true" />
               Manufacturer
@@ -120,14 +120,14 @@ export function NavBar() {
               <div
                 role="menu"
                 aria-label="Manufacturer portal menu"
-                className="absolute right-0 top-full mt-1.5 w-48 rounded-xl border bg-white shadow-lg py-1 z-50"
+                className="absolute right-0 top-full mt-1.5 w-48 rounded-xl border bg-white dark:bg-slate-900 shadow-lg py-1 z-50"
                 style={{ borderColor: 'var(--color-border)' }}
               >
                 <Link
                   href="/manufacturer/sign-in"
                   role="menuitem"
                   onClick={() => setMfgMenuOpen(false)}
-                  className="flex items-center gap-2 px-3 py-2 text-sm text-slate-700 hover:bg-slate-50 transition-colors"
+                  className="flex items-center gap-2 px-3 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
                 >
                   Sign in to portal
                 </Link>
@@ -135,7 +135,7 @@ export function NavBar() {
                   href="/manufacturer/sign-up"
                   role="menuitem"
                   onClick={() => setMfgMenuOpen(false)}
-                  className="flex items-center gap-2 px-3 py-2 text-sm text-slate-700 hover:bg-slate-50 transition-colors"
+                  className="flex items-center gap-2 px-3 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
                 >
                   Register your company
                 </Link>
@@ -143,8 +143,11 @@ export function NavBar() {
             )}
           </div>
 
+          <span className="w-px h-5 bg-slate-200 dark:bg-slate-800 mx-0.5" aria-hidden="true" />
+          <ThemeToggle />
+
           {/* Get Started button */}
-          <a href="#get-started" className="btn-primary text-sm whitespace-nowrap">
+          <a href="#get-started" className="btn-primary text-sm whitespace-nowrap ml-1">
             Get Started
           </a>
         </div>

@@ -38,7 +38,7 @@ export default function CommunityPage() {
   const CATEGORIES = ['All', 'Electronics', 'Appliances', 'Smartphones', 'Laptops', 'HVAC', 'Vehicles', 'Power tools']
 
   const { data, error, isLoading } = useSWR<ForumResponse>(
-    '/api/public/manuals',
+    '/api/hub/public/manuals',
     fetcher,
     { revalidateOnFocus: false },
   )
